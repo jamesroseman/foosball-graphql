@@ -1,0 +1,9 @@
+# App files
+app/public/dist
+
+# Server files
+server/dist
+
+# Project files
+node_modules
+npm-debug.log
