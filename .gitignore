@@ -1,8 +1,12 @@
 # App files
 app/public/dist
+app/.awcache
 
 # Server files
 server/dist
+
+# GraphQL files
+schema.graphql
 
 # Project files
 node_modules

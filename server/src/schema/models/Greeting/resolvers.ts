@@ -1,4 +1,4 @@
-import { ID, PageInfo } from '../common/relay';
+import { ID, PageInfo } from '../../common/relay';
 import {
   Greeting,
   GreetingConnection,

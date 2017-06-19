@@ -7,7 +7,7 @@ import { ModelSchemaStrings, ModelResolvers } from './models';
 
 // List of all model schemas included in schema
 const commonSchemaStr: string =
-  readSchema(path.join(__dirname, 'common.graphql'));
+  readSchema(path.join(__dirname, 'common/common.graphql'));
 const schemaStrings: string = [
   commonSchemaStr,
   ModelSchemaStrings

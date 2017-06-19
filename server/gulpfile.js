@@ -1,13 +1,20 @@
 const gulp = require('gulp');
+const gulpConcat = require('gulp-concat');
 const ts = require('gulp-typescript');
 const JSON_FILES = ['src/*.json', 'src/**/*.json'];
 
 // pull in the project TypeScript config
 const tsProject = ts.createProject('tsconfig.json');
 
+gulp.task('concat-schemas', function() {
+    gulp.src(['src/**/*.graphql'], { "base" : "src/schema/" })
+      .pipe(gulpConcat('schema.graphql'))
+      .pipe(gulp.dest('dist/schema'));
+});
+
 gulp.task('copy-schemas', function() {
     gulp.src(['src/**/*.graphql'], { "base" : "src/schema/" })
-        .pipe(gulp.dest('dist/schema'))
+      .pipe(gulp.dest('dist/schema'));
 });
 
 gulp.task('transpile', () => {

@@ -1,11 +1,13 @@
-import { ID, PageInfo } from '../common/relay';
+import { ID, PageInfo } from '../../common/relay';
 
 export class Greeting {
   id: ID;
+  description: string;
   name: string;
   synonyms: (first: number, last: number, before: ID, after: ID) => GreetingConnection;
   constructor(id: ID, name: string, synonyms?: (first: number, last: number, before: ID, after: ID) => GreetingConnection) {
     this.id = id;
+    this.description = 'A commonly known greeting.'
     this.name = name;
     this.synonyms = synonyms;
   }

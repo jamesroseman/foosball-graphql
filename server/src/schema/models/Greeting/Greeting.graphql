@@ -1,28 +1,28 @@
+### GREETING SCHEMA ###
+
+# Base Greeting type
 type Greeting implements Node {
   id: ID!
+  description: String
   name: String
   synonyms(first: Int, last: Int, before: ID, after: ID): GreetingConnection
 }
 
-# Queries
-
+# Greeting Queries
 type GreetingEdge {
   node: Greeting!
   cursor: ID!
 }
-
 type GreetingConnection {
   pageInfo: PageInfo
   edges: [GreetingEdge]
 }
 
-# Mutations
-
+# Greeting Mutations
 input IntroduceGreetingInput {
   name: String!
   clientMutationId: String!
 }
-
 type IntroduceGreetingPayload {
   greeting: Greeting!
   clientMutationId: String!

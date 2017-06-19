@@ -1,4 +1,6 @@
-## Relay common types
+### COMMON SCHEMA ###
+
+# Relay common types
 
 interface Node {
   id: ID!
@@ -10,8 +12,7 @@ type PageInfo {
   endCursor: String
 }
 
-
-## Root Query type
+# Root Query type
 type Query {
   # Relay signatures
   node(id: ID!): Node
@@ -22,7 +23,7 @@ type Query {
   ## Add new model signatures above this comment ##
 }
 
-## Root Mutation type
+# Root Mutation type
 type Mutation {
   introduceGreeting(input: IntroduceGreetingInput!): IntroduceGreetingPayload
   ## Add new model mutation signatures above this comment ##
