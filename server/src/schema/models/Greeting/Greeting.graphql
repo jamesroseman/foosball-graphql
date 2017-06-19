@@ -1,3 +1,29 @@
-type Query {
-  Greeting: String
+type Greeting implements Node {
+  id: ID!
+  name: String
+  synonyms(first: Int, last: Int, before: ID, after: ID): GreetingConnection
+}
+
+# Queries
+
+type GreetingEdge {
+  node: Greeting!
+  cursor: ID!
+}
+
+type GreetingConnection {
+  pageInfo: PageInfo
+  edges: [GreetingEdge]
+}
+
+# Mutations
+
+input IntroduceGreetingInput {
+  name: String!
+  clientMutationId: String!
+}
+
+type IntroduceGreetingPayload {
+  greeting: Greeting!
+  clientMutationId: String!
 }

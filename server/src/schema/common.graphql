@@ -1,3 +1,29 @@
+## Relay common types
+
 interface Node {
   id: ID!
+}
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+
+## Root Query type
+type Query {
+  # Relay signatures
+  node(id: ID!): Node
+
+  # Model signatures
+  greeting(id: ID!): Greeting,
+  greetings(first: Int, last: Int, before: ID, after: ID): GreetingConnection,
+  ## Add new model signatures above this comment ##
+}
+
+## Root Mutation type
+type Mutation {
+  introduceGreeting(input: IntroduceGreetingInput!): IntroduceGreetingPayload
+  ## Add new model mutation signatures above this comment ##
 }
