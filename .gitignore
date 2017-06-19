@@ -1,4 +1,5 @@
 # App files
+app/dist
 app/public/dist
 app/.awcache
 
