@@ -3,16 +3,18 @@ var path = require('path');
 var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
+    node: {
+      fs: 'empty',
+      path: 'empty',
+      __dirname: true
+    },
+
     entry: [
-      'react-hot-loader/patch',
-      'webpack-dev-server/client?http://localhost:5000',
-      'webpack/hot/only-dev-server',
-      './src/index.tsx'
+      './src/index.jsx'
     ],
 
     output: {
         filename: 'bundle.js',
-        publicPath: path.join(__dirname, '../../public/'),
         path: path.join(__dirname, '../../public/dist')
     },
 
@@ -20,20 +22,21 @@ module.exports = {
     devtool: 'source-map',
 
     resolve: {
-        // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
+        extensions: ['.js', '.jsx', '.json']
     },
 
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
-          loaders: ['babel-loader', 'ts-loader']
+          exclude: path.join(__dirname, '../../../node_modules'),
+          test: /\.jsx?$/,
+          loader: 'babel-loader'
         },
 
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
           enforce: 'pre',
+          exclude: path.join(__dirname, '../../../node_modules'),
           test: /\.js$/,
           loader: 'source-map-loader'
         }
@@ -50,7 +53,6 @@ module.exports = {
     },
 
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
       new WebpackNotifierPlugin({ alwaysNotify: true })
     ]
 };

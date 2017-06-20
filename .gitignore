@@ -2,6 +2,8 @@
 app/dist
 app/public/dist
 app/.awcache
+app/src/components/__generated__/
+app/src/containers/__generated__/
 
 # Server files
 server/dist
@@ -11,4 +13,8 @@ schema.graphql
 
 # Project files
 node_modules
+.DS_Store
+
+# Project logs
 npm-debug.log
+yarn-error.log
