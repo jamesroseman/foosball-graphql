@@ -1,12 +1,15 @@
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
-import { RelayEnvironment as environment } from '../relay';
+import { RelayEnvironment as environment } from '../../relay';
+
+// css
+import styles from './styles.css';
 
 class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <h2>Tiny GitHunt?!!</h2>
+      <div className={styles.app}>
+        <h2 className={styles.app}>Tiny GitHunt?!!</h2>
         <QueryRenderer
           environment={environment}
           query={graphql`
@@ -22,11 +25,6 @@ class App extends React.Component {
             if (error) {
               return <div>{error.message}</div>;
             } else if (props) {
-              // return <ul>
-              //   {props.greetings.edges.map((edge) =>
-              //     <li key={edge.node.id}>{edge.node.name} - {edge.node.id}</li>
-              //   )}
-              // </ul>
               return <div>{props.greeting.name} - {props.greeting.id}</div>
             }
             return <div>Loading</div>;

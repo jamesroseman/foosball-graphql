@@ -2,8 +2,8 @@
 app/dist
 app/public/dist
 app/.awcache
-app/src/components/__generated__/
-app/src/containers/__generated__/
+app/src/components/*/__generated__/
+app/src/containers/*/__generated__/
 
 # Server files
 server/dist

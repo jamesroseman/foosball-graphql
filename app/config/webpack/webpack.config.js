@@ -33,6 +33,23 @@ module.exports = {
           loader: 'babel-loader'
         },
 
+        {
+           test: /\.css$/,
+           use: [
+             {
+               loader: 'style-loader'
+             },
+             {
+               loader: 'css-loader',
+               options: {
+                 import: false,
+                 localIdentName: "[name]--[local]--[hash:base64:8]",
+                 modules: true
+               }
+             }
+           ]
+        },
+
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
           enforce: 'pre',

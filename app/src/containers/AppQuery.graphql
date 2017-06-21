@@ -1,6 +1,0 @@
-query AppQuery_greeting {
-  greeting(id:"3") {
-    id,
-    name
-  }
-}
