@@ -65,7 +65,7 @@ export const getTrips: (args: object) => TripConnection =
 
 export const upsertTrip: (trip: Trip) => void =
   (trip: Trip) => {
-    if (mockTripDatabase.has(trip.id)) {
+    if (!mockTripDatabase.has(trip.id)) {
       mockTripDatabase.set(trip.id, trip);
     } else {
       let updatedTrip = Object.assign(mockTripDatabase.get(trip.id), trip);
