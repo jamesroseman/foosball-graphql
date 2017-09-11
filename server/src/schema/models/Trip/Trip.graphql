@@ -1,0 +1,29 @@
+### TRIP SCHEMA ###
+
+# Supporting types
+type Location {
+  title: String!
+  name: String!
+  latitude: Float!
+  longitude: Float!
+}
+
+# Base Trip type
+type Trip implements Node {
+  id: ID!
+  description: String!
+  startTsUTC: String!
+  endTsUTC: String!
+  startLocation: Location!,
+  endLocation: Location!
+}
+
+# Trip Queries
+type TripEdge {
+  node: Trip!
+  cursor: ID!
+}
+type TripConnection {
+  pageInfo: PageInfo
+  edges: [TripEdge]
+}

@@ -1,7 +1,6 @@
 ### COMMON SCHEMA ###
 
 # Relay common types
-
 interface Node {
   id: ID!
 }
@@ -20,6 +19,8 @@ type Query {
   # Model signatures
   greeting(id: ID!): Greeting,
   greetings(first: Int, last: Int, before: ID, after: ID): GreetingConnection,
+  trip(id: ID!): Trip,
+  trips(first: Int, last: Int, before: ID, after: ID): TripConnection
   ## Add new model signatures above this comment ##
 }
 

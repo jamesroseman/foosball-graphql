@@ -3,8 +3,6 @@ import { QueryRenderer, graphql } from 'react-relay';
 import { RelayEnvironment as environment } from '../../relay';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
 
 // components
 import NavBar from '../../components/ui-NavBar';

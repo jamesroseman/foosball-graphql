@@ -7,12 +7,16 @@ import MenuItem from 'material-ui/MenuItem';
 
 export default class NavDrawer extends React.Component {
   static propTypes = {
-    isOpen: PropTypes.bool
+    open: PropTypes.bool
+  }
+
+  constructor(props) {
+    super(props);
   }
 
   render() {
     return (
-        <Drawer open={this.props.isOpen}>
+        <Drawer open={this.props.open}>
           <MenuItem>Menu Item</MenuItem>
           <MenuItem>Menu Item 2</MenuItem>
         </Drawer>

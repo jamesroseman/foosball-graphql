@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 // css
 import styles from './styles.css';
 
 // components
-import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import NavDrawer from '../ui-NavDrawer';
 
@@ -43,10 +44,10 @@ export default class NavBar extends React.Component {
 
   renderNavDrawer() {
     return (
-      <Drawer open={this.state.open}>
+      <NavDrawer open={this.state.open}>
         <MenuItem>Menu Item</MenuItem>
         <MenuItem>Menu Item 2</MenuItem>
-      </Drawer>
+      </NavDrawer>
     );
   }
 
@@ -56,8 +57,7 @@ export default class NavBar extends React.Component {
         <AppBar
           className={styles.navBar}
           iconClassNameRight="muidocs-icon-navigation-expand-more"
-          onLeftIconButtonTouchTap={this.toggleNavDrawer}
-          onTitleTouchTap={this.toggleNavDrawer}
+          onLeftIconButtonTouchTap={this.toggleNavDrawer.bind(this)}
           title={this.props.title}
         />
         {this.renderNavDrawer()}
