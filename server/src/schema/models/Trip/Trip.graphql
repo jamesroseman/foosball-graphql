@@ -7,6 +7,12 @@ type Location {
   latitude: Float!
   longitude: Float!
 }
+input LocationInput {
+  title: String!
+  name: String!
+  latitude: Float!
+  longitude: Float!
+}
 
 # Base Trip type
 type Trip implements Node {
@@ -33,8 +39,8 @@ input IntroduceTripInput {
   description: String
   startTsUTC: String!
   endTsUTC: String!
-  startLocation: Location!
-  endLocation: Location!
+  startLocation: LocationInput!
+  endLocation: LocationInput!
   clientMutationId: String!
 }
 type IntroduceTripPayload {

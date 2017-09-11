@@ -59,8 +59,8 @@ export class TripEdge {
 
 export class TripConnection {
   pageInfo: PageInfo
-  edges: [TripEdge]
-  constructor(pageInfo?: PageInfo, edges?: [TripEdge]) {
+  edges: TripEdge[]
+  constructor(pageInfo?: PageInfo, edges?: TripEdge[]) {
     this.pageInfo = pageInfo;
     this.edges = edges;
   }

@@ -31,7 +31,7 @@ export const introduceTrip: (input: IntroduceTripInput) => IntroduceTripPayload 
       endTsUTC: input.endTsUTC,
       startLocation: input.startLocation,
       endLocation: input.endLocation
-    }));
+    });
     Db.upsertTrip(newTrip);
     return new IntroduceTripPayload(newTrip, input.clientMutationId);
   }

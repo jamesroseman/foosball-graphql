@@ -23,14 +23,12 @@ let mockBosLocation: Location = new Location({
   latitude: 42.35843,
   longitude: -71.05977
 });
-
 let mockNycLocation: Location = new Location({
   title: "New York City, New York, United States",
   name: "New York City",
   latitude: 40.71427,
   longitude: -74.00597
 });
-
 let mockBosTrip: Trip = new Trip({
   id: "0",
   description: "Fake BOS test trip in fake DB",
@@ -39,7 +37,6 @@ let mockBosTrip: Trip = new Trip({
   startLocation: mockBosLocation,
   endLocation: mockNycLocation
 });
-
 let mockNycTrip: Trip = new Trip({
   id: "1",
   description: "Fake NYC test trip in fake DB",
@@ -48,20 +45,10 @@ let mockNycTrip: Trip = new Trip({
   startLocation: mockNycLocation,
   endLocation: mockBosLocation
 });
-
 let mockTripDatabase: Map<string, Trip> = new Map<string, Trip>([
   ["0", mockBosTrip],
   ["1", mockNycTrip]
 ]);
-
-let mockBosTripEdge: TripEdge = new TripEdge(mockBosTrip, mockBosTrip.id);
-let mockNycTripEdge: TripEdge = new TripEdge(mockNycTrip, mockNycTrip.id);
-
-let mockTripConnection = new TripConnection(
-  new PageInfo(false, false),
-  [mockBosTripEdge, mockNycTripEdge]
-);
-
 
 // Trip
 
@@ -70,11 +57,15 @@ export const getTripById = (id: string) => {
 }
 
 export const getTrips = (args: object) => {
-  return mockTripConnection;
+  return new TripConnection(
+    new PageInfo(false, false),
+    [...mockTripDatabase.values()].map((trip: Trip) => new TripEdge(trip, trip.id))
+  );
 }
 
 export const upsertTrip = (trip: Trip) => {
-  mockTripDatabase[trip.id] = trip;
+  console.log('upsertTrip', trip, mockTripDatabase);
+  mockTripDatabase = mockTripDatabase.set(trip.id, trip);
 }
 
 
