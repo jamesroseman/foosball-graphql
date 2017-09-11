@@ -64,8 +64,13 @@ export const getTrips = (args: object) => {
 }
 
 export const upsertTrip = (trip: Trip) => {
-  console.log('upsertTrip', trip, mockTripDatabase);
-  mockTripDatabase = mockTripDatabase.set(trip.id, trip);
+  console.log('upsertTrip', trip, mockTripDatabase.get(trip.id));
+  if (mockTripDatabase.get(trip.id) === undefined) {
+    mockTripDatabase.set(trip.id, trip);
+  } else {
+    let updatedTrip = Object.assign(mockTripDatabase.get(trip.id), trip);
+    mockTripDatabase.set(trip.id, updatedTrip);
+  }
 }
 
 

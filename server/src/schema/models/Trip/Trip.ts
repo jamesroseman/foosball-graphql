@@ -100,3 +100,40 @@ export class IntroduceTripPayload {
     this.clientMutationId = clientMutationId;
   }
 }
+
+
+export class UpdateTripInput {
+  id: ID
+  description: string
+  startTsUTC: string
+  endTsUTC: string
+  startLocation: Location
+  endLocation: Location
+  clientMutationId: ID
+  constructor(
+    id: ID,
+    description: string,
+    startTsUTC: string,
+    endTsUTC: string,
+    startLocation: Location,
+    endLocation: Location,
+    clientMutationId: ID
+  ) {
+    this.id = id;
+    this.description = description;
+    this.startTsUTC = startTsUTC;
+    this.endTsUTC = endTsUTC;
+    this.startLocation = startLocation;
+    this.endLocation = endLocation;
+    this.clientMutationId = clientMutationId;
+  }
+}
+
+export class UpdateTripPayload {
+  trip: Trip
+  clientMutationId: ID
+  constructor(trip: Trip, clientMutationId: ID) {
+    this.trip = trip;
+    this.clientMutationId = clientMutationId;
+  }
+}

@@ -45,5 +45,18 @@ input IntroduceTripInput {
 }
 type IntroduceTripPayload {
   trip: Trip!
+  clientMutationId: ID!
+}
+input UpdateTripInput {
+  id: ID!
+  description: String
+  startTsUTC: String!
+  endTsUTC: String!
+  startLocation: LocationInput!
+  endLocation: LocationInput!
   clientMutationId: String!
+}
+type UpdateTripPayload {
+  trip: Trip!
+  clientMutationId: ID!
 }

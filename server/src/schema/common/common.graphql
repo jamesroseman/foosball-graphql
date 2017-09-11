@@ -27,6 +27,7 @@ type Query {
 # Root Mutation type
 type Mutation {
   introduceGreeting(input: IntroduceGreetingInput!): IntroduceGreetingPayload,
-  introduceTrip(input: IntroduceTripInput!): IntroduceTripPayload
+  introduceTrip(input: IntroduceTripInput!): IntroduceTripPayload,
+  updateTrip(input: UpdateTripInput!): UpdateTripPayload
   ## Add new model mutation signatures above this comment ##
 }

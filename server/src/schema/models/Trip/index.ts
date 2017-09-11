@@ -5,7 +5,8 @@ import { readSchema } from '../../../util/graphql';
 import {
   getTripById,
   getTrips,
-  introduceTrip
+  introduceTrip,
+  updateTrip
 } from './resolvers';
 
 // Model Schema String
@@ -16,5 +17,6 @@ export const TripSchemaStr: string = readSchema(localSchemaPath);
 export const TripResolvers: object = {
   trip: (args: any) => getTripById(args.id),
   trips: (args: any) => getTrips(args),
-  introduceTrip: (args: any) => introduceTrip(args.input)
+  introduceTrip: (args: any) => introduceTrip(args.input),
+  updateTrip: (args: any) => updateTrip(args.input)
 }
