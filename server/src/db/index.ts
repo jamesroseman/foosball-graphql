@@ -62,6 +62,7 @@ let mockTripConnection = new TripConnection(
   [mockBosTripEdge, mockNycTripEdge]
 );
 
+
 // Trip
 
 export const getTripById = (id: string) => {
@@ -70,6 +71,10 @@ export const getTripById = (id: string) => {
 
 export const getTrips = (args: object) => {
   return mockTripConnection;
+}
+
+export const upsertTrip = (trip: Trip) => {
+  mockTripDatabase[trip.id] = trip;
 }
 
 

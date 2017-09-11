@@ -27,3 +27,17 @@ type TripConnection {
   pageInfo: PageInfo
   edges: [TripEdge]
 }
+
+# Trip Mutations
+input IntroduceTripInput {
+  description: String
+  startTsUTC: String!
+  endTsUTC: String!
+  startLocation: Location!
+  endLocation: Location!
+  clientMutationId: String!
+}
+type IntroduceTripPayload {
+  trip: Trip!
+  clientMutationId: String!
+}
