@@ -20,8 +20,9 @@ type Trip implements Node {
   description: String!
   startTsUTC: String!
   endTsUTC: String!
-  startLocation: Location!,
+  startLocation: Location!
   endLocation: Location!
+  isDeleted: Boolean = false
 }
 
 # Trip Queries
@@ -54,9 +55,25 @@ input UpdateTripInput {
   endTsUTC: String!
   startLocation: LocationInput!
   endLocation: LocationInput!
-  clientMutationId: String!
+  clientMutationId: ID!
 }
 type UpdateTripPayload {
+  trip: Trip!
+  clientMutationId: ID!
+}
+input DeleteTripInput {
+  id: ID!
+  clientMutationId: ID!
+}
+type DeleteTripPayload {
+  trip: Trip!
+  clientMutationId: ID!
+}
+input UndeleteTripInput {
+  id: ID!
+  clientMutationId: ID!
+}
+type UndeleteTripPayload {
   trip: Trip!
   clientMutationId: ID!
 }

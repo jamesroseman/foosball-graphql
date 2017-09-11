@@ -27,6 +27,7 @@ export interface TripParameters {
   endTsUTC: string
   startLocation: Location
   endLocation: Location
+  isDeleted?: boolean
 }
 
 export class Trip {
@@ -36,6 +37,7 @@ export class Trip {
   endTsUTC: string
   startLocation: Location
   endLocation: Location
+  isDeleted?: boolean
   constructor(params: TripParameters) {
     this.id = params.id;
     this.description = params.description;
@@ -43,6 +45,7 @@ export class Trip {
     this.endTsUTC = params.endTsUTC;
     this.startLocation = params.startLocation;
     this.endLocation = params.endLocation;
+    this.isDeleted = params.isDeleted ? params.isDeleted : false;
   }
 }
 
@@ -101,7 +104,6 @@ export class IntroduceTripPayload {
   }
 }
 
-
 export class UpdateTripInput {
   id: ID
   description: string
@@ -130,6 +132,48 @@ export class UpdateTripInput {
 }
 
 export class UpdateTripPayload {
+  trip: Trip
+  clientMutationId: ID
+  constructor(trip: Trip, clientMutationId: ID) {
+    this.trip = trip;
+    this.clientMutationId = clientMutationId;
+  }
+}
+
+export class DeleteTripInput {
+  id: ID
+  clientMutationId: ID
+  constructor(
+    id: ID,
+    clientMutationId: ID
+  ) {
+    this.id = id;
+    this.clientMutationId = clientMutationId;
+  }
+}
+
+export class DeleteTripPayload {
+  trip: Trip
+  clientMutationId: ID
+  constructor(trip: Trip, clientMutationId: ID) {
+    this.trip = trip;
+    this.clientMutationId = clientMutationId;
+  }
+}
+
+export class UndeleteTripInput {
+  id: ID
+  clientMutationId: ID
+  constructor(
+    id: ID,
+    clientMutationId: ID
+  ) {
+    this.id = id;
+    this.clientMutationId = clientMutationId;
+  }
+}
+
+export class UndeleteTripPayload {
   trip: Trip
   clientMutationId: ID
   constructor(trip: Trip, clientMutationId: ID) {

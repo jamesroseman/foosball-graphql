@@ -28,6 +28,8 @@ type Query {
 type Mutation {
   introduceGreeting(input: IntroduceGreetingInput!): IntroduceGreetingPayload,
   introduceTrip(input: IntroduceTripInput!): IntroduceTripPayload,
-  updateTrip(input: UpdateTripInput!): UpdateTripPayload
+  updateTrip(input: UpdateTripInput!): UpdateTripPayload,
+  deleteTrip(input: DeleteTripInput!): DeleteTripPayload,
+  undeleteTrip(input: UndeleteTripInput!): UndeleteTripPayload
   ## Add new model mutation signatures above this comment ##
 }

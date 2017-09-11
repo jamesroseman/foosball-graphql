@@ -1,11 +1,15 @@
 import { ID, PageInfo } from '../../common/relay';
 import {
+  DeleteTripInput,
+  DeleteTripPayload,
   IntroduceTripInput,
   IntroduceTripPayload,
   Location,
   Trip,
   TripConnection,
   TripEdge,
+  UndeleteTripInput,
+  UndeleteTripPayload,
   UpdateTripInput,
   UpdateTripPayload
 } from './Trip';
@@ -41,7 +45,6 @@ export const introduceTrip: (input: IntroduceTripInput) => IntroduceTripPayload 
 
 export const updateTrip: (input: UpdateTripInput) => UpdateTripPayload =
   (input: UpdateTripInput) => {
-    console.log('updateTrip', input);
     const updatedTrip: Trip = new Trip({
       id: input.id,
       description: input.description,
@@ -52,4 +55,24 @@ export const updateTrip: (input: UpdateTripInput) => UpdateTripPayload =
     });
     Db.upsertTrip(updatedTrip);
     return new UpdateTripPayload(updatedTrip, input.clientMutationId);
+  }
+
+export const deleteTrip: (input: DeleteTripInput) => DeleteTripPayload =
+  (input: DeleteTripInput) => {
+    let tripToDelete: Trip = Db.getTripById(input.id);
+    if (tripToDelete) {
+      tripToDelete.isDeleted = true;
+      Db.upsertTrip(tripToDelete);
+    }
+    return new DeleteTripPayload(tripToDelete, input.clientMutationId)
+  }
+
+export const undeleteTrip: (input: UndeleteTripInput) => UndeleteTripPayload =
+  (input: UndeleteTripInput) => {
+    let tripToUndelete: Trip = Db.getTripById(input.id);
+    if (tripToUndelete) {
+      tripToUndelete.isDeleted = false;
+      Db.upsertTrip(tripToUndelete);
+    }
+    return new UndeleteTripPayload(tripToUndelete, input.clientMutationId);
   }

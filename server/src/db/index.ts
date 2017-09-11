@@ -52,26 +52,26 @@ let mockTripDatabase: Map<string, Trip> = new Map<string, Trip>([
 
 // Trip
 
-export const getTripById = (id: string) => {
-  return mockTripDatabase.get(id);
-}
+export const getTripById: (id: string) => Trip =
+  (id: string) =>
+    mockTripDatabase.has(id) ? mockTripDatabase.get(id) : null;
 
-export const getTrips = (args: object) => {
-  return new TripConnection(
-    new PageInfo(false, false),
-    [...mockTripDatabase.values()].map((trip: Trip) => new TripEdge(trip, trip.id))
-  );
-}
+export const getTrips: (args: object) => TripConnection =
+  (args: object) =>
+    new TripConnection(
+      new PageInfo(false, false),
+      [...mockTripDatabase.values()].map((trip: Trip) => new TripEdge(trip, trip.id))
+    );
 
-export const upsertTrip = (trip: Trip) => {
-  console.log('upsertTrip', trip, mockTripDatabase.get(trip.id));
-  if (mockTripDatabase.get(trip.id) === undefined) {
-    mockTripDatabase.set(trip.id, trip);
-  } else {
-    let updatedTrip = Object.assign(mockTripDatabase.get(trip.id), trip);
-    mockTripDatabase.set(trip.id, updatedTrip);
+export const upsertTrip: (trip: Trip) => void =
+  (trip: Trip) => {
+    if (mockTripDatabase.has(trip.id)) {
+      mockTripDatabase.set(trip.id, trip);
+    } else {
+      let updatedTrip = Object.assign(mockTripDatabase.get(trip.id), trip);
+      mockTripDatabase.set(trip.id, updatedTrip);
+    }
   }
-}
 
 
 // GREETING //

@@ -3,9 +3,11 @@ import { readSchema } from '../../../util/graphql';
 
 // Model Resolvers
 import {
+  deleteTrip,
   getTripById,
   getTrips,
   introduceTrip,
+  undeleteTrip,
   updateTrip
 } from './resolvers';
 
@@ -18,5 +20,7 @@ export const TripResolvers: object = {
   trip: (args: any) => getTripById(args.id),
   trips: (args: any) => getTrips(args),
   introduceTrip: (args: any) => introduceTrip(args.input),
-  updateTrip: (args: any) => updateTrip(args.input)
+  updateTrip: (args: any) => updateTrip(args.input),
+  deleteTrip: (args: any) => deleteTrip(args.input),
+  undeleteTrip: (args: any) => undeleteTrip(args.input)
 }
