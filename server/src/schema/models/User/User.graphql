@@ -1,0 +1,21 @@
+### USER SCHEMA ###
+
+# Helper types
+enum AuthMethod {
+  TWITTER
+}
+type Rating {
+  offense: Int!
+  defense: Int!
+  composite: Int!
+  value: Int!
+}
+
+# Base User type
+type User implements Node {
+  id: ID!
+  authMethod: AuthMethod!
+  teams: [ID!]
+  games: [ID!]
+  rating: Rating!
+}
