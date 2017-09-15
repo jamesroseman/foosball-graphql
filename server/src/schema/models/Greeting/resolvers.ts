@@ -1,29 +1,38 @@
-import { ID, PageInfo } from '../../common/relay';
 import {
   Greeting,
   GreetingConnection,
   GreetingEdge,
   IntroduceGreetingInput,
   IntroduceGreetingPayload
-} from './Greeting';
-import * as Db from '../../../db';
+} from '../../../typings/types';
+
+const fakeGreeting: Greeting = {
+  id: "123",
+  name: "Hello, world!",
+  description: <string>null,
+  synonyms: <GreetingConnection>null
+};
+
+const fakeGreetingConnection: GreetingConnection = {
+  pageInfo: null,
+  edges: []
+}
 
 /* Queries */
 
 export const getGreetingById: (id: string) => Greeting =
   (id: string) =>
-    Db.getGreetingById(id);
+    fakeGreeting
 
 export const getGreetingConnection: (args: object) => GreetingConnection =
   (args: object) =>
-    Db.getGreetingConnection(args);
+    fakeGreetingConnection
 
 /* Mutations */
 
 export const introduceGreeting: (input: IntroduceGreetingInput) => IntroduceGreetingPayload =
-  (input: IntroduceGreetingInput) => {
-    const newId: ID = (Math.random() * 100).toPrecision(1).toString();
-    const newGreeting: Greeting = new Greeting(newId, input.name);
-    // fakeDatabase.set(newId, newGreeting);
-    return new IntroduceGreetingPayload(newGreeting, input.clientMutationId);
-  }
+  (input: IntroduceGreetingInput) =>
+    ({
+      greeting: fakeGreeting,
+      clientMutationId: input.clientMutationId
+    });
