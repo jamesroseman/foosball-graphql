@@ -1,17 +1,17 @@
-import * as path from 'path';
-import { graphql, buildSchema, GraphQLSchema } from 'graphql';
-import { readSchema } from '../util/graphql';
+import { buildSchema, graphql, GraphQLSchema } from "graphql";
+import * as path from "path";
+import { readSchema } from "../util/graphql";
 
 // Model Schemas
-import { ModelSchemaStrings, ModelResolvers } from './models';
+import { ModelResolvers, ModelSchemaStrings } from "./models";
 
 // List of all model schemas included in schema
 const commonSchemaStr: string =
-  readSchema(path.join(__dirname, 'common/common.graphql'));
+  readSchema(path.join(__dirname, "common/common.graphql"));
 const schemaStrings: string = [
   commonSchemaStr,
-  ModelSchemaStrings
-].join('\n');
+  ModelSchemaStrings,
+].join("\n");
 
 // Construct a schema, using GraphQL schema language
 const Schema: GraphQLSchema = buildSchema(schemaStrings);

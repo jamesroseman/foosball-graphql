@@ -1,35 +1,41 @@
-import * as http from 'http';
-import * as debug from 'debug';
+import * as debug from "debug";
+import * as http from "http";
 
-import App from './app';
-import logger from './logger';
+import App from "./app";
+import logger from "./logger";
 
-debug('elo-ranking:server');
+debug("elo-ranking:server");
 
 const port = normalizePort(process.env.PORT || 3000);
-App.set('port', port);
+App.set("port", port);
 
 const server = http.createServer(App);
 server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+server.on("error", onError);
+server.on("listening", onListening);
 
 function normalizePort(val: number|string): number|string|boolean {
-  let port: number = (typeof val === 'string') ? parseInt(val, 10) : val;
-  if (isNaN(port)) return val;
-  else if (port >= 0) return port;
-  else return false;
+  const normalizedPort: number = (typeof val === "string") ? parseInt(val, 10) : val;
+  if (isNaN(normalizedPort)) {
+    return val;
+  } else if (port >= 0) {
+    return port;
+  } else {
+    return false;
+  }
 }
 
 function onError(error: NodeJS.ErrnoException): void {
-  if (error.syscall !== 'listen') throw error;
-  let bind = (typeof port === 'string') ? 'Pipe ' + port : 'Port ' + port;
-  switch(error.code) {
-    case 'EACCES':
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+  const bind = (typeof port === "string") ? "Pipe " + port : "Port " + port;
+  switch (error.code) {
+    case "EACCES":
       logger.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
-    case 'EADDRINUSE':
+    case "EADDRINUSE":
       logger.error(`${bind} is already in use`);
       process.exit(1);
       break;
@@ -39,8 +45,8 @@ function onError(error: NodeJS.ErrnoException): void {
 }
 
 function onListening(): void {
-  let addr = server.address();
-  let bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
+  const addr = server.address();
+  const bind = (typeof addr === "string") ? `pipe ${addr}` : `port ${addr.port}`;
   debug(`Listening on ${bind}`);
-  logger.appStarted(port, 'localhost');
+  logger.appStarted(port, "localhost");
 }

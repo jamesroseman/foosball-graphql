@@ -3,36 +3,36 @@ import {
   GreetingConnection,
   GreetingEdge,
   IntroduceGreetingInput,
-  IntroduceGreetingPayload
-} from '../../../typings/types';
+  IntroduceGreetingPayload,
+} from "../../../typings/types";
 
 const fakeGreeting: Greeting = {
+  description: null as string,
   id: "123",
   name: "Hello, world!",
-  description: <string>null,
-  synonyms: <GreetingConnection>null
+  synonyms: null as GreetingConnection,
 };
 
 const fakeGreetingConnection: GreetingConnection = {
+  edges: [],
   pageInfo: null,
-  edges: []
-}
+};
 
 /* Queries */
 
 export const getGreetingById: (id: string) => Greeting =
   (id: string) =>
-    fakeGreeting
+    fakeGreeting;
 
 export const getGreetingConnection: (args: object) => GreetingConnection =
   (args: object) =>
-    fakeGreetingConnection
+    fakeGreetingConnection;
 
 /* Mutations */
 
 export const introduceGreeting: (input: IntroduceGreetingInput) => IntroduceGreetingPayload =
   (input: IntroduceGreetingInput) =>
     ({
+      clientMutationId: input.clientMutationId,
       greeting: fakeGreeting,
-      clientMutationId: input.clientMutationId
     });

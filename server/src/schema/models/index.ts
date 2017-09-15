@@ -1,14 +1,14 @@
-import { GreetingSchemaStr, GreetingResolvers } from './Greeting';
+import { GreetingResolvers, GreetingSchemaStr } from "./Greeting";
 
 // Model GraphQL Schema Strings
 const schemaStrings: [string] = [
-    GreetingSchemaStr
+    GreetingSchemaStr,
 ];
-export const ModelSchemaStrings: string = schemaStrings.join('\n');
+export const ModelSchemaStrings: string = schemaStrings.join("\n");
 
 // Model Resolvers
 const resolvers: [object] = [
-  GreetingResolvers
+  GreetingResolvers,
 ];
 
 export const ModelResolvers: object = resolvers.reduce((reduced, obj) => {
