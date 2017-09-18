@@ -21,7 +21,8 @@ type Query {
 
   # Model signatures
   greeting(id: ID!): Greeting,
-  greetings(first: Int, last: Int, before: ID, after: ID): GreetingConnection
+  greetings(first: Int, last: Int, before: ID, after: ID): GreetingConnection,
+  user(id: ID!): User,
   ## Add new model signatures above this comment ##
 }
 

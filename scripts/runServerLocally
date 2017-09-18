@@ -1,0 +1,2 @@
+yarn build:be &&
+NODE_ENV=dev DB_ADDR='mongodb://127.0.0.1:27017/foosball-test' yarn start

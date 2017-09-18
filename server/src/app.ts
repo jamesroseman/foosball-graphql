@@ -5,7 +5,7 @@ import * as logger from "morgan";
 import * as path from "path";
 
 // local
-import Db from "./db";
+import * as Db from "./db";
 
 // controllers
 import { GraphQLControllerFactory } from "./controllers";
@@ -19,8 +19,7 @@ class App {
   // ref to Express instance
   public express: express.Application;
 
-  // ref to Db instance and address
-  private db: Db;
+  // ref to Db address
   private dbAddr: string;
 
   // environment variables as flags
@@ -37,9 +36,8 @@ class App {
     this.environment();
     this.middleware();
     this.routes();
-    // Instantiate and initialize new database
-    this.db = new Db();
-    this.db.initialize(this.dbAddr);
+    // Initialize new database
+    Db.initialize(this.dbAddr);
   }
 
   // Read environment variables and throw errors accordingly.

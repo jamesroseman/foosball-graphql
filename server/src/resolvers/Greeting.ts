@@ -1,6 +1,4 @@
-import {
-  GreetingModel,
-} from "../models";
+import { GreetingModel } from "../models";
 import {
   Greeting,
   GreetingConnection,
@@ -22,6 +20,7 @@ const fakeGreetingConnection: GreetingConnection = {
 };
 
 /* Root */
+
 export default {
   greeting: (args: any) => getGreetingById(args.id),
   greetings: (args: any) => getGreetingConnection(args),

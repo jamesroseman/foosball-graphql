@@ -12,7 +12,6 @@ export const GreetingSchemaStr: string = readSchema(greetingSchemaPath);
 // List of all model schemas included in schema
 const schemaStrings = [
   "Common",
-  "Game",
   "Greeting",
   "User",
 ].map((schemaName) => {
