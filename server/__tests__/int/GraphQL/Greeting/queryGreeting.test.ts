@@ -9,7 +9,7 @@ const server = http.createServer(App);
 describe("Query Greeting", () => {
   describe("POST /api/graphql greeting", () => {
     it("should get back fake Greeting for id 123", (done) => {
-      const query = `
+      const query: string = `
         query {
           greeting(id:"123") {
             description,
@@ -19,12 +19,11 @@ describe("Query Greeting", () => {
         }
       `;
 
-      const reqBody = {
+      const reqBody: object = {
         query,
-        variables: null,
       };
 
-      const expectedRespose = {
+      const expectedRespose: object = {
         data: {
           greeting: {
             description: null,

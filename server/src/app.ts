@@ -4,20 +4,14 @@ import * as graphqlHTTP from "express-graphql";
 import * as logger from "morgan";
 import * as path from "path";
 
+// local
+import Db from "./db";
+
 // controllers
 import { GraphQLControllerFactory } from "./controllers";
 
 // schema
 import { Root, Schema as GraphQLSchema } from "./schema";
-
-// Check environment variables and throw errors if expected ones aren't set
-let isDevEnv: boolean = false;
-const nodeEnv: string | null = process.env.NODE_ENV;
-if (!nodeEnv) {
-  isDevEnv = false;
-} else {
-  isDevEnv = nodeEnv.toUpperCase() === "DEV";
-}
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -25,14 +19,48 @@ class App {
   // ref to Express instance
   public express: express.Application;
 
+  // ref to Db instance and address
+  private db: Db;
+  private dbAddr: string;
+
+  // environment variables as flags
+  private isEnv: any = {
+    dev: false,
+    prod: false,
+    test: false,
+  };
+
   // Run configuration methods on the Express instance.
   constructor() {
+    // Prepare express server
     this.express = express();
+    this.environment();
     this.middleware();
     this.routes();
+    // Instantiate and initialize new database
+    this.db = new Db();
+    this.db.initialize(this.dbAddr);
   }
 
-  // Configure Express middleware.
+  // Read environment variables and throw errors accordingly.
+  private environment(): void {
+    // Read enviornment setting (dev|prod|test)
+    const nodeEnv: string | null = process.env.NODE_ENV;
+    if (nodeEnv) {
+      this.isEnv.dev = nodeEnv.toUpperCase() === "DEV";
+      this.isEnv.prod = nodeEnv.toUpperCase() === "PROD";
+      this.isEnv.test = nodeEnv.toUpperCase() === "TEST";
+    }
+    // Read database address
+    const dbAddr: string | null = process.env.DB_ADDR;
+    if (!dbAddr) {
+      throw new Error("Application cannot be run without DB_ADDR set.");
+    } else {
+      this.dbAddr = dbAddr;
+    }
+  }
+
+  // Configure global Express middleware.
   private middleware(): void {
     this.express.use(logger("dev"));
     this.express.use(bodyParser.json());
@@ -42,7 +70,10 @@ class App {
   // Configure API endpoints.
   private routes(): void {
     // GraphQL API endpoints
-    this.express.use("/api/graphql", GraphQLControllerFactory(isDevEnv, Root, GraphQLSchema));
+    this.express.use(
+      "/api/graphql",
+      GraphQLControllerFactory(this.isEnv.dev, Root, GraphQLSchema),
+    );
 
     // Direct traffic to front-end app
     // Note: This must come last
