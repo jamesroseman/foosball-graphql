@@ -1,8 +1,5 @@
 ### COMMON SCHEMA ###
 
-# Common scalars
-scalar Date
-
 # Relay common types
 interface Node {
   id: ID!

@@ -11,16 +11,37 @@
     "clean:be": "rm -rf server/dist",
     "clean:fe": "rm -rf app/public/dist && rm -rf app/src/components/__generated__/ && rm -rf app/src/containers/__generated__/",
     "lint": "yarn run lint:be",
-    "lint:be": "./node_modules/.bin/tslint --fix 'server' && ./node_modules/.bin/tslint --project 'server' -t stylish",
+    "lint:be": "./node_modules/.bin/tslint --project 'server' -t stylish",
+    "lint:fix": "yarn run lint:fix:be",
+    "lint:fix:be": "./node_modules/.bin/tslint -c tslint.json --fix 'server'",
     "relay": "yarn run build:schema && cp server/dist/schema/schema.graphql app/ && relay-compiler --src app/ --schema app/schema.graphql --extensions jsx",
     "start": "node server/dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "watch:fe": "yarn run watch:relay & yarn run watch:webpack",
     "watch:relay": "relay-compiler --src app/src/ --schema schema.graphql --extensions jsx --watch",
     "watch:webpack": "cd app && webpack --config config/webpack/webpack.config.js --watch --progress --colors --display-error-details && cd .."
   },
   "author": "James Roseman",
   "license": "MIT",
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "server/tsconfig.json"
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/server/dist/"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
+  },
   "dependencies": {
     "@types/chalk": "^0.4.31",
     "@types/express-graphql": "0.0.33",
@@ -51,6 +72,7 @@
     "@types/body-parser": "0.0.33",
     "@types/debug": "0.0.29",
     "@types/express": "^4.0.33",
+    "@types/jest": "^20.0.8",
     "@types/morgan": "^1.7.32",
     "@types/node": "^6.0.46",
     "@types/react": "^15.0.29",
@@ -67,13 +89,16 @@
     "css-loader": "^0.28.4",
     "graphql-code-generator": "^0.8.10",
     "graphql-to-json": "^1.1.2",
+    "graphql-tools": "^1.2.2",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-typescript": "^3.1.1",
+    "jest": "^21.1.0",
     "react-hot-loader": "^3.0.0-beta.2",
     "relay-compiler": "^1.0.0",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
+    "ts-jest": "^21.0.1",
     "ts-loader": "^2.1.0",
     "tslint": "^5.7.0",
     "typescript": "^2.3.4",
