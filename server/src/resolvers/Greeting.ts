@@ -1,10 +1,13 @@
 import {
+  GreetingModel,
+} from "../models";
+import {
   Greeting,
   GreetingConnection,
   GreetingEdge,
   IntroduceGreetingInput,
   IntroduceGreetingPayload,
-} from "../../../typings/types";
+} from "../schema/types";
 
 const fakeGreeting: Greeting = {
   description: null as string,
@@ -18,19 +21,26 @@ const fakeGreetingConnection: GreetingConnection = {
   pageInfo: null,
 };
 
+/* Root */
+export default {
+  greeting: (args: any) => getGreetingById(args.id),
+  greetings: (args: any) => getGreetingConnection(args),
+  introduceGreeting: (args: any) => introduceGreeting(args.input),
+};
+
 /* Queries */
 
-export const getGreetingById: (id: string) => Greeting =
+const getGreetingById: (id: string) => Greeting =
   (id: string) =>
     fakeGreeting;
 
-export const getGreetingConnection: (args: object) => GreetingConnection =
+const getGreetingConnection: (args: object) => GreetingConnection =
   (args: object) =>
     fakeGreetingConnection;
 
 /* Mutations */
 
-export const introduceGreeting: (input: IntroduceGreetingInput) => IntroduceGreetingPayload =
+const introduceGreeting: (input: IntroduceGreetingInput) => IntroduceGreetingPayload =
   (input: IntroduceGreetingInput) =>
     ({
       clientMutationId: input.clientMutationId,

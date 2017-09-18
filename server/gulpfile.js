@@ -23,8 +23,7 @@ gulp.task('copy-schemas', function() {
 gulp.task('gen-typings', () => {
   gulp.start('concat-schemas')
   run('../node_modules/.bin/apollo-codegen download-schema dist/schema/schema.graphql --output dist/schema/schema.json').exec()
-  run('mkdir -p src/typings').exec();
-  run('../node_modules/.bin/gql-gen --file dist/schema/schema.json --template typescript --out src/typings/').exec()
+  run('../node_modules/.bin/gql-gen --file dist/schema/schema.json --template typescript --out src/schema/').exec()
 });
 
 // Main gulp tasks

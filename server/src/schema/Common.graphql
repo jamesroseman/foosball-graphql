@@ -1,5 +1,8 @@
 ### COMMON SCHEMA ###
 
+# Helper types
+scalar Date
+
 # Relay common types
 interface Node {
   id: ID!

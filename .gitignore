@@ -8,6 +8,7 @@ app/src/containers/*/__generated__/
 # Server files
 server/dist
 server/src/typings
+server/src/schema/typings
 
 # GraphQL files
 schema.graphql
