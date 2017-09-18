@@ -24,6 +24,6 @@ const schemaStrings = [
 const Schema: GraphQLSchema = buildSchema(schemaStrings);
 
 // The root provides a resolver function for each API endpoint
-const Root = ModelResolvers;
+const Root: object = ModelResolvers;
 
-export { Schema, Root };
+export { Root, Schema };

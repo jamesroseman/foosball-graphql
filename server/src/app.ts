@@ -4,8 +4,20 @@ import * as graphqlHTTP from "express-graphql";
 import * as logger from "morgan";
 import * as path from "path";
 
+// controllers
+import { GraphQLControllerFactory } from "./controllers";
+
 // schema
 import { Root, Schema as GraphQLSchema } from "./schema";
+
+// Check environment variables and throw errors if expected ones aren't set
+let isDevEnv: boolean = false;
+const nodeEnv: string | null = process.env.NODE_ENV;
+if (!nodeEnv) {
+  isDevEnv = false;
+} else {
+  isDevEnv = nodeEnv.toUpperCase() === "DEV";
+}
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -29,24 +41,11 @@ class App {
 
   // Configure API endpoints.
   private routes(): void {
-    const router = express.Router();
-
-    // /api/graphql
-    router.post("/api/graphql", graphqlHTTP({
-      graphiql: false,
-      rootValue: Root,
-      schema: GraphQLSchema,
-    }));
-
-    router.get("/api/graphql", graphqlHTTP({
-      graphiql: true,
-      rootValue: Root,
-      schema: GraphQLSchema,
-    }));
+    // GraphQL API endpoints
+    this.express.use("/api/graphql", GraphQLControllerFactory(isDevEnv, Root, GraphQLSchema));
 
     // Direct traffic to front-end app
     // Note: This must come last
-    this.express.use("/", router);
     this.express.use(express.static(path.join(__dirname, "./../../app/public")));
   }
 

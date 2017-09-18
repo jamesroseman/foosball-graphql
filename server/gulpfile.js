@@ -12,18 +12,18 @@ const tsProject = ts.createProject('tsconfig.json');
 gulp.task('concat-schemas', function() {
   gulp.src(['src/**/*.graphql'], { "base" : "src/schema/" })
     .pipe(gulpConcat('schema.graphql'))
-    .pipe(gulp.dest('dist/schema'));
+    .pipe(gulp.dest('dist/src/schema'));
 });
 
 gulp.task('copy-schemas', function() {
   gulp.src(['src/**/*.graphql'], { "base" : "src/schema/" })
-    .pipe(gulp.dest('dist/schema'));
+    .pipe(gulp.dest('dist/src/schema'));
 });
 
 gulp.task('gen-typings', () => {
   gulp.start('concat-schemas')
-  run('../node_modules/.bin/apollo-codegen download-schema dist/schema/schema.graphql --output dist/schema/schema.json').exec()
-  run('../node_modules/.bin/gql-gen --file dist/schema/schema.json --template typescript --out src/schema/').exec()
+  run('../node_modules/.bin/apollo-codegen download-schema dist/src/schema/schema.graphql --output dist/src/schema/schema.json').exec()
+  run('../node_modules/.bin/gql-gen --file dist/src/schema/schema.json --template typescript --out src/schema/').exec()
 });
 
 // Main gulp tasks

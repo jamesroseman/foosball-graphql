@@ -1,8 +1,8 @@
 import * as debug from "debug";
 import * as http from "http";
 
-import App from "./app";
-import logger from "./logger";
+import App from "./src/app";
+import logger from "./src/logger";
 
 debug("elo-ranking:server");
 
