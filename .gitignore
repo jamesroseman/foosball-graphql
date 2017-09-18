@@ -16,6 +16,7 @@ schema.graphql
 # Project files
 node_modules
 .DS_Store
+.yarnclean
 
 # Project logs
 npm-debug.log
