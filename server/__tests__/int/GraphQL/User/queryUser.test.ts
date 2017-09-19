@@ -15,12 +15,7 @@ import { User } from "../../../../src/schema/types";
 const server: Server = http.createServer(App);
 let testUser: IUserModel | null = null;
 
-interface IUserDataReponse {
-  user: User;
-}
-
 describe("Query User", () => {
-
   beforeEach(() => {
     testUser = {
       firstName: "testFirstName",

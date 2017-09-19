@@ -5,27 +5,24 @@ import { Document, Model } from "mongoose";
 import { IUserModel, UserModel } from "../models";
 import { User } from "../schema/types";
 
+// Conversion method between DB model and GraphQL type
+function modelToType(team: IUserModel): User {
+  return {
+    firstName: team.firstName,
+    id: team.id,
+    lastName: team.lastName,
+  } as User;
+}
+
 export function createUser(user: IUserModel): Promise<User> {
   return UserModel
     .create(user)
-    .then((dbUser: IUserModel) => {
-      return {
-        firstName: dbUser.firstName,
-        id: dbUser.id,
-        lastName: dbUser.lastName,
-      } as User;
-    });
+    .then(modelToType);
 }
 
 export function readUserById(id: string): Promise<User> {
   return UserModel
     .findById(id)
     .exec()
-    .then((dbUser: IUserModel) => {
-      return {
-        firstName: dbUser.firstName,
-        id: dbUser.id,
-        lastName: dbUser.lastName,
-      } as User;
-    });
+    .then(modelToType);
 }

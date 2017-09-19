@@ -41,8 +41,8 @@ export interface GreetingEdge {
 /* Base Team type */
 export interface Team extends Node {
   id: string; 
-  offense: User | null; 
-  defense: User | null; 
+  offense: User; 
+  defense: User; 
 }
 /* Base User type */
 export interface User extends Node {

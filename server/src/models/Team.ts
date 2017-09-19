@@ -1,18 +1,20 @@
 import * as mongoose from "mongoose";
-import { Document, Schema } from "mongoose";
+import { Document, Model, Schema } from "mongoose";
 import * as mongoosePaginate from "mongoose-paginate";
 
-// models
-import { UserSchema } from "./User";
+export interface ITeamModel extends Document {
+  defenseId: string;
+  offenseId: string;
+}
 
 export const TeamSchema: Schema = new Schema({
-  defense: {
+  defenseId: {
     required: true,
-    type: UserSchema,
+    type: String,
   },
-  offense: {
+  offenseId: {
     required: true,
-    type: UserSchema,
+    type: String,
   },
 });
 
@@ -21,4 +23,4 @@ TeamSchema.plugin(mongoosePaginate);
 
 // Export model
 mongoose.model("Team", TeamSchema);
-export const TeamModel = mongoose.model("Team");
+export const TeamModel: Model<ITeamModel> = mongoose.model("Team");
