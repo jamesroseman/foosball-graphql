@@ -1,63 +1,51 @@
+import { Server } from "http";
 import * as http from "http";
 import * as mongoose from "mongoose";
 import * as request from "supertest";
 
 // local
 import App from "../../../../src/app";
-const server = http.createServer(App);
+import * as Db from "../../../../src/db";
+import { graphQL } from "../../../util";
 
 // models
-import { UserModel } from "../../../../src/models";
+import { IUserModel, UserModel } from "../../../../src/models";
 import { User } from "../../../../src/schema/types";
 
-let testUser: any = {};
+const server: Server = http.createServer(App);
+let testUser: IUserModel | null = null;
 
-describe("Query User by ID", () => {
+interface IUserDataReponse {
+  user: User;
+}
 
-  beforeEach((done) => {
+describe("Query User", () => {
+
+  beforeEach(() => {
     testUser = {
       firstName: "testFirstName",
       lastName: "testLastName",
-    };
-    // UserModel.remove({}, (err) => {
-    //   done();
-    // });
-    done();
+    } as IUserModel;
   });
 
-  it("should get back newly created User by ID", (done) => {
-    // Create user
-    UserModel.create(testUser, (dbErr: any, user: any) => {
-      if (dbErr) {
-        throw new Error(dbErr);
-      }
-      console.log("queryUser:user", user);
-      const testUserId: string = user._id;
-      console.log("queryUser:user:id", testUserId);
+  afterEach((done) => {
+    // Clean up the test database
+    UserModel.remove({}, done);
+  });
+
+  it("should get newly created User by ID", async () => {
+    function checkUserById(user: User): Promise<User> {
       const query: string = `
         query {
-          user(id: "${testUserId}") {
+          user(id: "${user.id}") {
             firstName,
             lastName
           }
         }`;
-      const expectedResponse: object = {
-        data: {
-          user: {
-            firstName: testUser.firstName,
-            lastName: testUser.lastName,
-          },
-        },
-      };
-      request(server)
-        .post("/api/graphql")
-        .set("content-type", "application/x-www-form-urlencoded")
-        .send({ query })
-        .end((err: any, res: any) => {
-          expect(res.status).toBe(200);
-          expect(res.body).toEqual(expectedResponse);
-          done();
-        });
-    });
+      return graphQL.queryUser(server, query);
+    }
+    // Create a user, then query based on its ID
+    const createdUser: User = await Db.createUser(testUser);
+    await expect(checkUserById(createdUser)).resolves.toEqual(testUser);
   });
 });

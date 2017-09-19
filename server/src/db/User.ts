@@ -1,18 +1,31 @@
-import { UserModel } from "../models";
+import * as mongoose from "mongoose";
+import { Document, Model } from "mongoose";
+
+// models
+import { IUserModel, UserModel } from "../models";
 import { User } from "../schema/types";
 
-export const getUserById: (id: string, callback: any) => any =
-  (id: string, callback: any) => {
-    return UserModel.findById(id, (err: any, dbUser: UserModel) => {
-      if (dbUser) {
-        const user: User = {
-          firstName: dbUser.firstName,
-          // Mongoose and GraphQL manage ID fields differently
-          id: dbUser._id,
-          lastName: dbUser.lastName,
-        };
-        return callback(err, user);
-      }
-      return callback(err, null);
+export function createUser(user: IUserModel): Promise<User> {
+  return UserModel
+    .create(user)
+    .then((dbUser: IUserModel) => {
+      return {
+        firstName: dbUser.firstName,
+        id: dbUser.id,
+        lastName: dbUser.lastName,
+      } as User;
     });
-  };
+}
+
+export function readUserById(id: string): Promise<User> {
+  return UserModel
+    .findById(id)
+    .exec()
+    .then((dbUser: IUserModel) => {
+      return {
+        firstName: dbUser.firstName,
+        id: dbUser.id,
+        lastName: dbUser.lastName,
+      } as User;
+    });
+}

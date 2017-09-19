@@ -11,6 +11,7 @@ export interface Query {
   node: Node | null; /* Relay signatures */
   greeting: Greeting | null; /* Model signatures */
   greetings: GreetingConnection | null; 
+  team: Team | null; 
   user: User | null; 
 }
 /* Base Greeting type */
@@ -37,6 +38,12 @@ export interface GreetingEdge {
   node: Greeting; 
   cursor: string; 
 }
+/* Base Team type */
+export interface Team extends Node {
+  id: string; 
+  offense: User | null; 
+  defense: User | null; 
+}
 /* Base User type */
 export interface User extends Node {
   id: string; 
@@ -51,6 +58,13 @@ export interface Mutation {
 export interface IntroduceGreetingPayload {
   greeting: Greeting; 
   clientMutationId: string; 
+}
+
+export interface ConnectionArgs {
+  first: number | null; 
+  last: number | null; 
+  before: string | null; 
+  after: string | null; 
 }
 /* Greeting Mutations */
 export interface IntroduceGreetingInput {
@@ -68,6 +82,9 @@ export interface GreetingsQueryArgs {
   last: number | null; 
   before: string | null; 
   after: string | null; 
+}
+export interface TeamQueryArgs {
+  id: string; 
 }
 export interface UserQueryArgs {
   id: string; 

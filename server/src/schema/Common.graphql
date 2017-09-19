@@ -10,8 +10,14 @@ interface Node {
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+  startCursor: ID
+  endCursor: ID
+}
+type ConnectionArgs {
+  first: Int,
+  last: Int,
+  before: ID,
+  after: ID
 }
 
 # Root Query type
@@ -22,6 +28,7 @@ type Query {
   # Model signatures
   greeting(id: ID!): Greeting,
   greetings(first: Int, last: Int, before: ID, after: ID): GreetingConnection,
+  team(id: ID!): Team,
   user(id: ID!): User,
   ## Add new model signatures above this comment ##
 }

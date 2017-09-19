@@ -1,0 +1,8 @@
+### TEAM SCHEMA ###
+
+# Base Team type
+type Team implements Node {
+  id: ID!
+  offense: User
+  defense: User
+}

@@ -9,11 +9,6 @@ export default {
 
 /* Query */
 
-const getUserById: (id: string) => User =
-  (id: string) =>
-    Db.getUserById(id, (err: any, user: User) => {
-      if (err) {
-        throw new Error(err);
-      }
-      return user;
-    });
+function getUserById(id: string): Promise<User> {
+  return Db.readUserById(id);
+}

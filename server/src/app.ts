@@ -1,6 +1,7 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import * as graphqlHTTP from "express-graphql";
+import * as mongoose from "mongoose";
 import * as logger from "morgan";
 import * as path from "path";
 
@@ -31,6 +32,8 @@ class App {
 
   // Run configuration methods on the Express instance.
   constructor() {
+    // Overwrite mpromises
+    (mongoose as any).Promise = global.Promise;
     // Prepare express server
     this.express = express();
     this.environment();
