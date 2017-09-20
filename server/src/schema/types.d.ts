@@ -36,6 +36,15 @@ export interface User extends Node {
   firstName: string; 
   lastName: string; 
 }
+/* Root Mutation type */
+export interface Mutation {
+  introduceTeam: IntroduceTeamPayload | null; 
+}
+
+export interface IntroduceTeamPayload {
+  team: Team; 
+  clientMutationId: string; 
+}
 
 export interface PageInfo {
   hasNextPage: boolean; 
@@ -50,6 +59,16 @@ export interface ConnectionArgs {
   before: string | null; 
   after: string | null; 
 }
+
+export interface IntroduceTeamInput {
+  teamInput: TeamInput; 
+  clientMutationId: string; 
+}
+/* Team Mutations */
+export interface TeamInput {
+  offenseUserId: string; 
+  defenseUserId: string; 
+}
 export interface NodeQueryArgs {
   id: string; 
 }
@@ -61,4 +80,7 @@ export interface TeamQueryArgs {
 }
 export interface UserQueryArgs {
   id: string; 
+}
+export interface IntroduceTeamMutationArgs {
+  input: IntroduceTeamInput | null; 
 }

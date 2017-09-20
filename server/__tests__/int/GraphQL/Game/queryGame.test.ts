@@ -8,8 +8,7 @@ import App from "../../../../src/app";
 import { graphQL } from "../../../util";
 
 // models
-import { GameModel, IGameModel } from "../../../../src/models";
-import { Game, User } from "../../../../src/schema/types";
+import { Game } from "../../../../src/schema/types";
 
 const server: Server = http.createServer(App);
 let testGame: Game | null = null;
@@ -33,42 +32,40 @@ describe("Query Game", () => {
               team {
                 defense {
                   firstName
-                  id
-                  lastName
-                }
-                id
-                offense {
-                  firstName
-                  id
-                  lastName
                 }
               }
               value
             }
-            id
             winningTeamScore {
               team {
-                defense {
-                  firstName
-                  id
-                  lastName
-                }
-                id
                 offense {
-                  firstName
-                  id
                   lastName
                 }
               }
-              value
             }
           }
         }`;
       return graphQL.queryGame(server, query);
     }
+    const expectedResponse = {
+      losingTeamScore: {
+        team: {
+          defense: {
+            firstName: testGame.losingTeamScore.team.defense.firstName,
+          },
+        }
+        value: testGame.losingTeamScore.value,
+      },
+      winningTeamScore: {
+        team: {
+          offense: {
+            lastName: testGame.winningTeamScore.team.offense.lastName,
+          },
+        },
+      },
+    };
     // Create a game, then query based on its ID
     const createdGame: Game = await graphQL.createTestGame(testGame);
-    testGame.id = createdGame.id;
-    await expect(checkGameById(createdGame)).resolves.toEqual(testGame);
+    await expect(checkGameById(createdGame)).resolves.toEqual(expectedResponse);
   });
 });

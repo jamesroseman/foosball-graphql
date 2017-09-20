@@ -9,8 +9,7 @@ import * as Db from "../../../../src/db";
 import { graphQL } from "../../../util";
 
 // models
-import { ITeamModel, IUserModel, TeamModel, UserModel } from "../../../../src/models";
-import { Team, User } from "../../../../src/schema/types";
+import { Team } from "../../../../src/schema/types";
 
 const server: Server = http.createServer(App);
 let testTeam: Team | null = null;
@@ -20,10 +19,10 @@ describe("Query Team", () => {
     testTeam = graphQL.testTeamFactory();
   });
 
-  // afterEach((done) => {
-  //   // Clean up the test database
-  //   graphQL.clearDatabase(done);
-  // });
+  afterEach((done) => {
+    // Clean up the test database
+    graphQL.clearDatabase(done);
+  });
 
   it("should get newly created Team by ID", async () => {
     function checkTeamById(team: Team): Promise<Team> {

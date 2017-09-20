@@ -8,7 +8,6 @@ import App from "../../../../src/app";
 import { graphQL } from "../../../util";
 
 // models
-import { IUserModel, UserModel } from "../../../../src/models";
 import { User } from "../../../../src/schema/types";
 
 const server: Server = http.createServer(App);
@@ -19,10 +18,10 @@ describe("Query User", () => {
     testUser = graphQL.testUserFactory();
   });
 
-  // afterEach((done) => {
-  //   // Clean up the test database
-  //   graphQL.clearDatabase(done);
-  // });
+  afterEach((done) => {
+    // Clean up the test database
+    graphQL.clearDatabase(done);
+  });
 
   it("should get newly created User by ID", async () => {
     function checkUserById(user: User): Promise<User> {

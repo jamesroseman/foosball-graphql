@@ -6,3 +6,17 @@ type Team implements Node {
   offense: User!
   defense: User!
 }
+
+# Team Mutations
+input TeamInput {
+  offenseUserId: ID!
+  defenseUserId: ID!
+}
+input IntroduceTeamInput {
+  teamInput: TeamInput!
+  clientMutationId: String!
+}
+type IntroduceTeamPayload {
+  team: Team!
+  clientMutationId: String!
+}

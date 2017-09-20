@@ -11,6 +11,7 @@ import { Game, Team, TeamScore, User } from "../../src/schema/types";
 // Different data interfaces depending on request
 interface IDataResponse {
   body: {
+    errors: any;
     data: object;
   };
 }
@@ -24,11 +25,11 @@ interface IGameDataResponse {
   game: Game;
 }
 
-function queryQL(server: Server, query: string, transformRes: any): Promise<any> {
+export function queryQL<T>(server: Server, query: string, transformRes: any, variables?: object): Promise<T> {
   return request(server)
     .post("/api/graphql")
-    .set("content-type", "application/x-www-form-urlencoded")
-    .send({ query })
+    .set("content-type", "application/json")
+    .send({ query, variables })
     .expect(200)
     .then((res: IDataResponse) => {
       return res.body.data;
@@ -36,33 +37,33 @@ function queryQL(server: Server, query: string, transformRes: any): Promise<any>
     .then(transformRes);
 }
 
-// Helper functions to query GraphQL server with queries (and then
+// Helper functions to hit GraphQL server with queries (and then
 // format the response automatically)
 export function queryUser(server: Server, query: string): Promise<User> {
   function transformResToUser(res: IUserDataResponse) {
     return res.user as User;
   }
-  return queryQL(server, query, transformResToUser);
+  return queryQL<User>(server, query, transformResToUser);
 }
 export function queryTeam(server: Server, query: string): Promise<Team> {
   function transformResToTeam(res: ITeamDataResponse) {
     return res.team as Team;
   }
-  return queryQL(server, query, transformResToTeam);
+  return queryQL<Team>(server, query, transformResToTeam);
 }
 export function queryGame(server: Server, query: string): Promise<Game> {
   function transformResToGame(res: IGameDataResponse) {
     return res.game as Game;
   }
-  return queryQL(server, query, transformResToGame);
+  return queryQL<Game>(server, query, transformResToGame);
 }
 
 // Helper function to clean database between each test
 export async function clearDatabase(callback?: any): void {
-  await GameModel.remove({}).exec();
-  await UserModel.remove({}).exec();
-  await TeamModel.remove({}).exec();
-  return callback();
+  // await GameModel.remove({}).exec();
+  // await UserModel.remove({}).exec();
+  // await TeamModel.remove({}).exec();
+  return await callback();
 }
 
 // Helper static object factories to quickly add a User or Team or Game
