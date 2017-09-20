@@ -4,7 +4,7 @@ import * as util from "util";
 
 // models
 import { IUserModel, UserModel } from "../models";
-import { User } from "../schema/types";
+import { ConnectionArgs, User, UserConnection, UserEdge } from "../schema/types";
 
 // Custom error for User database transactions
 function DbUserError(message: string = "Error in User Db transaction") {
@@ -56,6 +56,33 @@ export async function readUserById(id: string): Promise<User> {
     .catch((err: Error) => {
       if (err instanceof DbUserError) {
         throw new DbUserError(`User: ${id} not found`);
+      }
+      throw err;
+    });
+}
+
+export async function readUsers(args: ConnectionArgs): Promise<UserConnection> {
+  return UserModel
+    .find()
+    .exec()
+    .then((users: IUserModel[]) => {
+      return users
+        .map(modelToType)
+        .map((user: User) => {
+          return {
+            cursor: user.id,
+            node: user,
+          } as UserEdge;
+        });
+    })
+    .then((edges: UserEdge[]) => {
+      return {
+        edges,
+      } as UserConnection;
+    })
+    .catch((err: Error) => {
+      if (err instanceof DbUserError) {
+        throw new DbUserError(`Users not found`);
       }
       throw err;
     });

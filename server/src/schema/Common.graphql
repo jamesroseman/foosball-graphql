@@ -13,7 +13,7 @@ type PageInfo {
   startCursor: ID
   endCursor: ID
 }
-type ConnectionArgs {
+input ConnectionArgs {
   first: Int,
   last: Int,
   before: ID,
@@ -29,6 +29,7 @@ type Query {
   game(id: ID!): Game,
   team(id: ID!): Team,
   user(id: ID!): User,
+  users(args: ConnectionArgs): UserConnection,
   ## Add new model signatures above this comment ##
 }
 

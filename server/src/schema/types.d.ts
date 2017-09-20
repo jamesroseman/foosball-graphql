@@ -12,6 +12,7 @@ export interface Query {
   game: Game | null; /* Model signatures */
   team: Team | null; 
   user: User | null; 
+  users: UserConnection | null; 
 }
 /* Base Game type */
 export interface Game extends Node {
@@ -55,6 +56,23 @@ export interface AggGameStats {
   lost: number; 
   played: number; 
 }
+
+export interface UserConnection {
+  pageInfo: PageInfo | null; 
+  edges: UserEdge[] | null; 
+}
+
+export interface PageInfo {
+  hasNextPage: boolean; 
+  hasPreviousPage: boolean; 
+  startCursor: string | null; 
+  endCursor: string | null; 
+}
+/* User Queries */
+export interface UserEdge {
+  node: User; 
+  cursor: string; 
+}
 /* Root Mutation type */
 export interface Mutation {
   introduceGame: IntroduceGamePayload | null; 
@@ -69,13 +87,6 @@ export interface IntroduceGamePayload {
 export interface IntroduceTeamPayload {
   team: Team; 
   clientMutationId: string; 
-}
-
-export interface PageInfo {
-  hasNextPage: boolean; 
-  hasPreviousPage: boolean; 
-  startCursor: string | null; 
-  endCursor: string | null; 
 }
 
 export interface ConnectionArgs {
@@ -118,6 +129,9 @@ export interface TeamQueryArgs {
 }
 export interface UserQueryArgs {
   id: string; 
+}
+export interface UsersQueryArgs {
+  args: ConnectionArgs | null; 
 }
 export interface IntroduceGameMutationArgs {
   input: IntroduceGameInput | null; 

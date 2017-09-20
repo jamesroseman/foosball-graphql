@@ -6,3 +6,13 @@ type User implements Node {
   firstName: String!
   lastName: String!
 }
+
+# User Queries
+type UserEdge {
+  node: User!
+  cursor: ID!
+}
+type UserConnection {
+  pageInfo: PageInfo
+  edges: [UserEdge]
+}
