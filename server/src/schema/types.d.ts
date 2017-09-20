@@ -18,6 +18,8 @@ export interface Game extends Node {
   id: string; 
   losingTeamScore: TeamScore; 
   winningTeamScore: TeamScore; 
+  startDate: string | null; 
+  endDate: string; 
 }
 /* Helper types */
 export interface TeamScore {
@@ -93,6 +95,7 @@ export interface GameInput {
   losingTeamPoints: number; 
   winningTeamId: string; 
   winningTeamPoints: number; 
+  startDate: string | null; 
 }
 
 export interface IntroduceTeamInput {

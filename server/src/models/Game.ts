@@ -3,7 +3,7 @@ import { Document, Model, Schema } from "mongoose";
 import * as mongoosePaginate from "mongoose-paginate";
 
 // models
-import { Team } from "../schema/types";
+import { Date, Team } from "../schema/types";
 import { ITeamModel } from "./Team";
 
 interface ITeamScoreModel {
@@ -14,6 +14,9 @@ interface ITeamScoreModel {
 export interface IGameModel extends Document {
   losingTeamScore: ITeamScoreModel;
   winningTeamScore: ITeamScoreModel;
+  // All dates are recorded in Timestamp
+  startDate: string;
+  endDate: string;
 }
 
 const TeamScoreSchema: Schema = new Schema({
@@ -28,9 +31,17 @@ const TeamScoreSchema: Schema = new Schema({
 });
 
 export const GameSchema: Schema = new Schema({
+  endDate: {
+    required: true,
+    type: String,
+  },
   losingTeamScore: {
     required: true,
     type: TeamScoreSchema,
+  },
+  startDate: {
+    required: false,
+    type: String,
   },
   winningTeamScore: {
     required: true,

@@ -7,7 +7,7 @@ import { readUserById } from "./User";
 
 // models
 import { ITeamModel, TeamModel } from "../models";
-import { PlayerStats, Team, User } from "../schema/types";
+import { Game, PlayerStats, Team, User } from "../schema/types";
 
 // Custom error for Team database transactions
 function DbTeamError(message: string = "Error in Team Db transaction") {

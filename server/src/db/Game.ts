@@ -29,11 +29,13 @@ function modelToType(game: IGameModel): Promise<Game> {
     const losingTeam: Team = values[0];
     const winningTeam: Team = values[1];
     return {
+      endDate: game.endDate,
       id: game._id.toString(),
       losingTeamScore: {
         team: losingTeam,
         value: game.losingTeamScore.value,
       },
+      startDate: game.startDate,
       winningTeamScore: {
         team: winningTeam,
         value: game.winningTeamScore.value,
@@ -46,10 +48,12 @@ function typeToModel(game: Game): IGameModel {
     throw new DbGameError();
   }
   return {
+    endDate: game.endDate,
     losingTeamScore: {
       teamId: game.losingTeamScore.team.id,
       value: game.losingTeamScore.value,
     },
+    startDate: game.startDate,
     winningTeamScore: {
       teamId: game.winningTeamScore.team.id,
       value: game.winningTeamScore.value,

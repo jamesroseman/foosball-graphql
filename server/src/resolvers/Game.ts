@@ -31,10 +31,12 @@ function introduceGame(input: IntroduceGameInput): Promise<IntroduceGamePayload>
     const losingTeam: Team = teams[0];
     const winningTeam: Team = teams[1];
     const game: Game = {
+      endDate: new Date().toISOString(),
       losingTeamScore: {
         team: losingTeam,
         value: input.gameInput.losingTeamPoints,
       },
+      startDate: input.gameInput.startDate,
       winningTeamScore: {
         team: winningTeam,
         value: input.gameInput.winningTeamPoints,

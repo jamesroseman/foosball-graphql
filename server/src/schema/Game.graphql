@@ -11,6 +11,8 @@ type Game implements Node {
   id: ID!
   losingTeamScore: TeamScore!
   winningTeamScore: TeamScore!
+  startDate: String
+  endDate: String!
 }
 
 # Game Mutations
@@ -19,6 +21,7 @@ input GameInput {
   losingTeamPoints: Int!
   winningTeamId: ID!
   winningTeamPoints: Int!
+  startDate: String
 }
 input IntroduceGameInput {
   gameInput: GameInput!
