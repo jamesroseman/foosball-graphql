@@ -9,7 +9,7 @@ import * as Db from "../../../../src/db";
 import { graphQL } from "../../../util";
 
 // models
-import { IntroduceTeamPayload, Team } from "../../../../src/schema/types";
+import { IntroduceTeamPayload, Team, User } from "../../../../src/schema/types";
 
 const server: Server = http.createServer(App);
 let testTeam: Team | null = null;
@@ -29,9 +29,9 @@ describe("Query Team", () => {
     function transformResToPayload(res: any) {
       return res.introduceTeam as IntroduceTeamPayload;
     }
-    function createNewTeam(team: Team): Promise<IntroduceTeamPayload> {
+    function introduceNewTeam(team: Team): Promise<IntroduceTeamPayload> {
       const mutation: string = `
-        mutation ($input: IntroduceTeamInput){
+        mutation ($input: IntroduceTeamInput) {
           introduceTeam(input: $input) {
             team {
               defense {
@@ -48,8 +48,8 @@ describe("Query Team", () => {
         input: {
           clientMutationId,
           teamInput: {
-            defenseUserId: "59c1d1c116fe341c154ea35d",
-            offenseUserId: "59c1d1c116fe341c154ea35d",
+            defenseUserId: team.defense.id,
+            offenseUserId: team.offense.id,
           },
         },
       };
@@ -57,6 +57,7 @@ describe("Query Team", () => {
     }
     const expectedPayload = {
       payload: {
+        clientMutationId,
         team: {
           defense: {
             firstName: testTeam.defense.firstName,
@@ -67,6 +68,10 @@ describe("Query Team", () => {
         },
       },
     };
-    expect(createNewTeam(testTeam)).resolves.toEqual(expectedPayload);
+    const offense: User = await graphQL.createTestUser();
+    const defense: User = await graphQL.createTestUser();
+    testTeam.offense = offense;
+    testTeam.defense = defense;
+    expect(introduceNewTeam(testTeam)).resolves.toEqual(expectedPayload);
   });
 });

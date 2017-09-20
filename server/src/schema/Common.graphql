@@ -34,6 +34,7 @@ type Query {
 
 # Root Mutation type
 type Mutation {
+  introduceGame(input: IntroduceGameInput): IntroduceGamePayload,
   introduceTeam(input: IntroduceTeamInput): IntroduceTeamPayload,
   ## Add new model mutation signatures above this comment ##
 }

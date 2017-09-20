@@ -29,6 +29,7 @@ export interface Team extends Node {
   id: string; 
   offense: User; 
   defense: User; 
+  stats: PlayerStats; 
 }
 /* Base User type */
 export interface User extends Node {
@@ -36,9 +37,31 @@ export interface User extends Node {
   firstName: string; 
   lastName: string; 
 }
+
+export interface PlayerStats {
+  alltime: AggPlayerStats; 
+}
+
+export interface AggPlayerStats {
+  total: AggGameStats; 
+  offense: AggGameStats; 
+  defense: AggGameStats; 
+}
+/* Helper types */
+export interface AggGameStats {
+  won: number; 
+  lost: number; 
+  played: number; 
+}
 /* Root Mutation type */
 export interface Mutation {
+  introduceGame: IntroduceGamePayload | null; 
   introduceTeam: IntroduceTeamPayload | null; 
+}
+
+export interface IntroduceGamePayload {
+  game: Game; 
+  clientMutationId: string; 
 }
 
 export interface IntroduceTeamPayload {
@@ -58,6 +81,18 @@ export interface ConnectionArgs {
   last: number | null; 
   before: string | null; 
   after: string | null; 
+}
+
+export interface IntroduceGameInput {
+  gameInput: GameInput; 
+  clientMutationId: string; 
+}
+/* Game Mutations */
+export interface GameInput {
+  losingTeamId: string; 
+  losingTeamPoints: number; 
+  winningTeamId: string; 
+  winningTeamPoints: number; 
 }
 
 export interface IntroduceTeamInput {
@@ -80,6 +115,9 @@ export interface TeamQueryArgs {
 }
 export interface UserQueryArgs {
   id: string; 
+}
+export interface IntroduceGameMutationArgs {
+  input: IntroduceGameInput | null; 
 }
 export interface IntroduceTeamMutationArgs {
   input: IntroduceTeamInput | null; 

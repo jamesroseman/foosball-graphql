@@ -1,4 +1,7 @@
 import * as Db from "../db";
+import { basePlayerStats } from "./defaults";
+
+// models
 import {
   IntroduceTeamInput,
   IntroduceTeamMutationArgs,
@@ -33,11 +36,12 @@ function introduceTeam(input: IntroduceTeamInput): Promise<IntroduceTeamPayload>
     const team: Team = {
       defense: defenseUser,
       offense: offenseUser,
+      stats: basePlayerStats,
     } as Team;
     const createdTeam: Team = await Db.createTeam(team);
     return {
       clientMutationId: input.clientMutationId,
       team: createdTeam,
-    };
+    } as IntroduceTeamPayload;
   });
 }

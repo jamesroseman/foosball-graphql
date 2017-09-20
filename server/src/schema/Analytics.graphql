@@ -1,0 +1,16 @@
+### ANALYTICS SCHEMA ###
+
+# Helper types
+type AggGameStats {
+  won: Int!
+  lost: Int!
+  played: Int!
+}
+type AggPlayerStats {
+  total: AggGameStats!
+  offense: AggGameStats!
+  defense: AggGameStats!
+}
+type PlayerStats {
+  alltime: AggPlayerStats!
+}

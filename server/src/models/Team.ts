@@ -2,9 +2,14 @@ import * as mongoose from "mongoose";
 import { Document, Model, Schema } from "mongoose";
 import * as mongoosePaginate from "mongoose-paginate";
 
+// models
+import { PlayerStats } from "../schema/types";
+import { PlayerStatsSchema } from "./Analytics";
+
 export interface ITeamModel extends Document {
   defenseId: string;
   offenseId: string;
+  stats: PlayerStats;
 }
 
 export const TeamSchema: Schema = new Schema({
@@ -15,6 +20,10 @@ export const TeamSchema: Schema = new Schema({
   offenseId: {
     required: true,
     type: String,
+  },
+  stats: {
+    required: true,
+    type: PlayerStatsSchema,
   },
 });
 

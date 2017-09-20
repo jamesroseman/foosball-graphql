@@ -7,6 +7,7 @@ import { readSchema } from "../util/graphql";
 
 // List of all model schemas included in schema
 const schemaStrings = [
+  "Analytics",
   "Common",
   "Game",
   "Team",

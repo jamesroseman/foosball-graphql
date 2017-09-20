@@ -73,7 +73,8 @@
     "react-dom": "^15.6.1",
     "react-relay": "^1.0.0",
     "react-router": "^4.1.1",
-    "react-tap-event-plugin": "^2.0.1"
+    "react-tap-event-plugin": "^2.0.1",
+    "util": "^0.10.3"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.11",

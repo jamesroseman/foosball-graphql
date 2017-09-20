@@ -12,3 +12,19 @@ type Game implements Node {
   losingTeamScore: TeamScore!
   winningTeamScore: TeamScore!
 }
+
+# Game Mutations
+input GameInput {
+  losingTeamId: ID!
+  losingTeamPoints: Int!
+  winningTeamId: ID!
+  winningTeamPoints: Int!
+}
+input IntroduceGameInput {
+  gameInput: GameInput!
+  clientMutationId: String!
+}
+type IntroduceGamePayload {
+  game: Game!
+  clientMutationId: String!
+}

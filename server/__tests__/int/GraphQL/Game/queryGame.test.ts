@@ -53,7 +53,7 @@ describe("Query Game", () => {
           defense: {
             firstName: testGame.losingTeamScore.team.defense.firstName,
           },
-        }
+        },
         value: testGame.losingTeamScore.value,
       },
       winningTeamScore: {

@@ -30,25 +30,25 @@ describe("Query Team", () => {
         query {
           team(id: "${team.id}") {
             defense {
-              firstName,
-              id,
-              lastName
+              firstName
             },
-            id,
             offense {
-              firstName,
-              id,
               lastName
             }
           }
         }`;
       return graphQL.queryTeam(server, query);
     }
+    const expectedResponse = {
+      defense: {
+        firstName: testTeam.defense.firstName,
+      },
+      offense: {
+        lastName: testTeam.offense.lastName,
+      },
+    };
     // Create team, then query based on its ID
     const createdTeam: Team = await graphQL.createTestTeam(testTeam);
-    testTeam.id = createdTeam.id;
-    testTeam.defense.id = createdTeam.defense.id;
-    testTeam.offense.id = createdTeam.offense.id;
-    await expect(checkTeamById(createdTeam)).resolves.toEqual(testTeam);
+    await expect(checkTeamById(createdTeam)).resolves.toEqual(expectedResponse);
   });
 });

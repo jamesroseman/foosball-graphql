@@ -29,15 +29,17 @@ describe("Query User", () => {
         query {
           user(id: "${user.id}") {
             firstName,
-            id,
             lastName
           }
         }`;
       return graphQL.queryUser(server, query);
     }
+    const expectedResponse = {
+      firstName: testUser.firstName,
+      lastName: testUser.lastName,
+    };
     // Create a user, then query based on its ID
     const createdUser: User = await graphQL.createTestUser(testUser);
-    testUser.id = createdUser.id;
-    await expect(checkUserById(createdUser)).resolves.toEqual(testUser);
+    await expect(checkUserById(createdUser)).resolves.toEqual(expectedResponse);
   });
 });

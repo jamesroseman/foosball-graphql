@@ -3,6 +3,7 @@ import * as request from "supertest";
 
 // local
 import * as Db from "../../src/db";
+import { basePlayerStats } from "../../src/resolvers/defaults";
 
 // models
 import { GameModel, TeamModel, UserModel } from "../../src/models";
@@ -25,11 +26,20 @@ interface IGameDataResponse {
   game: Game;
 }
 
-export function queryQL<T>(server: Server, query: string, transformRes: any, variables?: object): Promise<T> {
+export function queryQL<T>(
+  server: Server,
+  query: string,
+  transformRes: (res: any) => T,
+  variables?: object,
+): Promise<T> {
+  let body: object = { query };
+  if (variables) {
+    body = { query, variables };
+  }
   return request(server)
     .post("/api/graphql")
     .set("content-type", "application/json")
-    .send({ query, variables })
+    .send(body)
     .expect(200)
     .then((res: IDataResponse) => {
       return res.body.data;
@@ -59,10 +69,10 @@ export function queryGame(server: Server, query: string): Promise<Game> {
 }
 
 // Helper function to clean database between each test
-export async function clearDatabase(callback?: any): void {
-  // await GameModel.remove({}).exec();
-  // await UserModel.remove({}).exec();
-  // await TeamModel.remove({}).exec();
+export async function clearDatabase(callback?: any): Promise<void> {
+  await GameModel.remove({}).exec();
+  await UserModel.remove({}).exec();
+  await TeamModel.remove({}).exec();
   return await callback();
 }
 
@@ -93,30 +103,23 @@ export function testTeamFactory(offense?: User, defense?: User): Team {
     defense,
     id: fakeIdToOverwrite,
     offense,
+    stats: basePlayerStats,
   } as Team;
 }
 export async function createTestTeam(team?: Team): Promise<Team> {
   if (!team) {
     team = testTeamFactory();
   }
-  // Create users, then the team itself
-  const defense = await Db.createUser(team.defense);
-  const offense = await Db.createUser(team.offense);
   // Set offense and defense IDs to valid IDs
-  team.defense.id = defense.id;
-  team.offense.id = offense.id;
+  team.defense = await createTestUser(team.defense);
+  team.offense = await createTestUser(team.offense);
   return Db.createTeam(team);
 }
 export function testGameFactory(losingTeamScore?: TeamScore, winningTeamScore?: TeamScore): Game {
   if (!losingTeamScore || !winningTeamScore) {
-    // Create users
-    const losingOffenseUser: User = testUserFactory("testLosingOffenseFirst", "testLosingOffenseLast");
-    const losingDefenseUser: User = testUserFactory("testLosingDefenseFirst", "testLosingDefenseLast");
-    const winningOffenseUser: User = testUserFactory("testWinningOffenseFirst", "testWinningOffenseLast");
-    const winningDefenseUser: User = testUserFactory("testWinningDefenseFirst", "testWinningDefenseLast");
     // Create teams
-    const losingTeam: Team = testTeamFactory(losingOffenseUser, losingDefenseUser);
-    const winningTeam: Team = testTeamFactory(winningOffenseUser, winningDefenseUser);
+    const losingTeam: Team = testTeamFactory();
+    const winningTeam: Team = testTeamFactory();
     // Create team scores
     losingTeamScore = {
       team: losingTeam,
@@ -137,11 +140,8 @@ export async function createTestGame(game?: Game): Promise<Game> {
   if (!game) {
     game = testGameFactory();
   }
-  // Create teams, then the game itself
-  const losingTeam: Team = await createTestTeam(game.losingTeamScore.team);
-  const winningTeam: Team = await createTestTeam(game.winningTeamScore.team);
   // Set teams to valid teams with existing Users
-  game.losingTeamScore.team = losingTeam;
-  game.winningTeamScore.team = winningTeam;
+  game.losingTeamScore.team = await createTestTeam(game.losingTeamScore.team);
+  game.winningTeamScore.team = await createTestTeam(game.winningTeamScore.team);
   return Db.createGame(game);
 }

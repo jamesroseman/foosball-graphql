@@ -5,6 +5,7 @@ type Team implements Node {
   id: ID!
   offense: User!
   defense: User!
+  stats: PlayerStats!
 }
 
 # Team Mutations

@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import { Document, Model } from "mongoose";
+import * as util from "util";
 
 // local
 import { readTeamById } from "./Team";
@@ -8,8 +9,19 @@ import { readTeamById } from "./Team";
 import { GameModel, IGameModel } from "../models";
 import { Game, Team, User } from "../schema/types";
 
+// Custom error for Game database transactions
+function DbGameError(message: string = "Error in Game Db transaction") {
+  Error.captureStackTrace(this, this.constructor);
+  this.name = this.constructor.name;
+  this.message = message;
+}
+util.inherits(DbGameError, Error);
+
 // Conversion method between DB model and GraphQL type
 function modelToType(game: IGameModel): Promise<Game> {
+  if (!game) {
+    throw new DbGameError();
+  }
   return Promise.all([
     readTeamById(game.losingTeamScore.teamId),
     readTeamById(game.winningTeamScore.teamId),
@@ -30,6 +42,9 @@ function modelToType(game: IGameModel): Promise<Game> {
   });
 }
 function typeToModel(game: Game): IGameModel {
+  if (!game) {
+    throw new DbGameError();
+  }
   return {
     losingTeamScore: {
       teamId: game.losingTeamScore.team.id,
@@ -46,12 +61,24 @@ export function createGame(game: Game): Promise<Game> {
   return GameModel
     .create(typeToModel(game))
     // We return the GraphQL representation to the client
-    .then(modelToType);
+    .then(modelToType)
+    .catch((err: Error) => {
+      if (err instanceof DbGameError) {
+        throw new DbGameError("Unable to create Game");
+      }
+      throw err;
+    });
 }
 
 export function readGameById(id: string): Promise<Game> {
   return GameModel
     .findById(id)
     .exec()
-    .then(modelToType);
+    .then(modelToType)
+    .catch((err: Error) => {
+      if (err instanceof DbGameError) {
+        throw new DbGameError(`Game: ${id} not found`);
+      }
+      throw err;
+    });
 }
