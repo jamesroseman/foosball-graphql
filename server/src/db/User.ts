@@ -6,17 +6,24 @@ import { IUserModel, UserModel } from "../models";
 import { User } from "../schema/types";
 
 // Conversion method between DB model and GraphQL type
-function modelToType(team: IUserModel): User {
+function modelToType(user: IUserModel): User {
   return {
-    firstName: team.firstName,
-    id: team.id,
-    lastName: team.lastName,
+    firstName: user.firstName,
+    id: user._id.toString(),
+    lastName: user.lastName,
   } as User;
 }
+function typeToModel(user: User): IUserModel {
+  return {
+    firstName: user.firstName,
+    lastName: user.lastName,
+  } as IUserModel;
+}
 
-export function createUser(user: IUserModel): Promise<User> {
+export function createUser(user: User): Promise<User> {
   return UserModel
-    .create(user)
+    .create(typeToModel(user))
+    // We return the GraphQL representation to the client
     .then(modelToType);
 }
 

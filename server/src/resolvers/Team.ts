@@ -1,10 +1,10 @@
 import * as Db from "../db";
-import { Team } from "../schema/types";
+import { Team, TeamQueryArgs } from "../schema/types";
 
 /* Root */
 
 export default {
-  team: (args: any) => getTeamById(args.id),
+  team: (args: TeamQueryArgs) => getTeamById(args.id),
 };
 
 /* Query */

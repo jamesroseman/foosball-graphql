@@ -1,10 +1,10 @@
-import GreetingResolvers from "./Greeting";
+import GameResolvers from "./Game";
 import TeamResolvers from "./Team";
 import UserResolvers from "./User";
 
 // Model Resolvers
 const resolvers: [object] = [
-  GreetingResolvers,
+  GameResolvers,
   TeamResolvers,
   UserResolvers,
 ];

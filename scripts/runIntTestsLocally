@@ -1,2 +1,2 @@
 yarn build:be && 
-DB_ADDR='mongodb://127.0.0.1:27017/foosball-test' yarn test:watch -- --testPathPattern "server/__tests__/int/" --runInBand
+DB_ADDR='mongodb://127.0.0.1:27017/foosball-test' ./node_modules/.bin/jest --testPathPattern "server/__tests__/int/" --runInBand --watchAll

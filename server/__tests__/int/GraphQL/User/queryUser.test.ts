@@ -5,7 +5,6 @@ import * as request from "supertest";
 
 // local
 import App from "../../../../src/app";
-import * as Db from "../../../../src/db";
 import { graphQL } from "../../../util";
 
 // models
@@ -13,20 +12,17 @@ import { IUserModel, UserModel } from "../../../../src/models";
 import { User } from "../../../../src/schema/types";
 
 const server: Server = http.createServer(App);
-let testUser: IUserModel | null = null;
+let testUser: User | null = null;
 
 describe("Query User", () => {
   beforeEach(() => {
-    testUser = {
-      firstName: "testFirstName",
-      lastName: "testLastName",
-    } as IUserModel;
+    testUser = graphQL.testUserFactory();
   });
 
-  afterEach((done) => {
-    // Clean up the test database
-    UserModel.remove({}, done);
-  });
+  // afterEach((done) => {
+  //   // Clean up the test database
+  //   graphQL.clearDatabase(done);
+  // });
 
   it("should get newly created User by ID", async () => {
     function checkUserById(user: User): Promise<User> {
@@ -34,13 +30,15 @@ describe("Query User", () => {
         query {
           user(id: "${user.id}") {
             firstName,
+            id,
             lastName
           }
         }`;
       return graphQL.queryUser(server, query);
     }
     // Create a user, then query based on its ID
-    const createdUser: User = await Db.createUser(testUser);
+    const createdUser: User = await graphQL.createTestUser(testUser);
+    testUser.id = createdUser.id;
     await expect(checkUserById(createdUser)).resolves.toEqual(testUser);
   });
 });

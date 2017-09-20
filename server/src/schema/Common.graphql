@@ -26,15 +26,13 @@ type Query {
   node(id: ID!): Node
 
   # Model signatures
-  greeting(id: ID!): Greeting,
-  greetings(first: Int, last: Int, before: ID, after: ID): GreetingConnection,
+  game(id: ID!): Game,
   team(id: ID!): Team,
   user(id: ID!): User,
   ## Add new model signatures above this comment ##
 }
 
 # Root Mutation type
-type Mutation {
-  introduceGreeting(input: IntroduceGreetingInput!): IntroduceGreetingPayload
-  ## Add new model mutation signatures above this comment ##
-}
+# type Mutation {
+#   ## Add new model mutation signatures above this comment ##
+# }

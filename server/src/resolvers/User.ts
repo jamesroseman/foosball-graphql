@@ -1,10 +1,10 @@
 import * as Db from "../db";
-import { User } from "../schema/types";
+import { User, UserQueryArgs } from "../schema/types";
 
 /* Root */
 
 export default {
-  user: (args: any) => getUserById(args.id),
+  user: (args: UserQueryArgs) => getUserById(args.id),
 };
 
 /* Query */

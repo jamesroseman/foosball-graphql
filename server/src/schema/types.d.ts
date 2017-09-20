@@ -9,34 +9,20 @@ export interface Node {
 /* Root Query type */
 export interface Query {
   node: Node | null; /* Relay signatures */
-  greeting: Greeting | null; /* Model signatures */
-  greetings: GreetingConnection | null; 
+  game: Game | null; /* Model signatures */
   team: Team | null; 
   user: User | null; 
 }
-/* Base Greeting type */
-export interface Greeting extends Node {
+/* Base Game type */
+export interface Game extends Node {
   id: string; 
-  description: string | null; 
-  name: string | null; 
-  synonyms: GreetingConnection | null; 
+  losingTeamScore: TeamScore; 
+  winningTeamScore: TeamScore; 
 }
-
-export interface GreetingConnection {
-  pageInfo: PageInfo | null; 
-  edges: GreetingEdge[] | null; 
-}
-
-export interface PageInfo {
-  hasNextPage: boolean; 
-  hasPreviousPage: boolean; 
-  startCursor: string | null; 
-  endCursor: string | null; 
-}
-/* Greeting Queries */
-export interface GreetingEdge {
-  node: Greeting; 
-  cursor: string; 
+/* Helper types */
+export interface TeamScore {
+  team: Team; 
+  value: number; 
 }
 /* Base Team type */
 export interface Team extends Node {
@@ -50,14 +36,12 @@ export interface User extends Node {
   firstName: string; 
   lastName: string; 
 }
-/* Root Mutation type */
-export interface Mutation {
-  introduceGreeting: IntroduceGreetingPayload | null; 
-}
 
-export interface IntroduceGreetingPayload {
-  greeting: Greeting; 
-  clientMutationId: string; 
+export interface PageInfo {
+  hasNextPage: boolean; 
+  hasPreviousPage: boolean; 
+  startCursor: string | null; 
+  endCursor: string | null; 
 }
 
 export interface ConnectionArgs {
@@ -66,35 +50,15 @@ export interface ConnectionArgs {
   before: string | null; 
   after: string | null; 
 }
-/* Greeting Mutations */
-export interface IntroduceGreetingInput {
-  name: string; 
-  clientMutationId: string; 
-}
 export interface NodeQueryArgs {
   id: string; 
 }
-export interface GreetingQueryArgs {
+export interface GameQueryArgs {
   id: string; 
-}
-export interface GreetingsQueryArgs {
-  first: number | null; 
-  last: number | null; 
-  before: string | null; 
-  after: string | null; 
 }
 export interface TeamQueryArgs {
   id: string; 
 }
 export interface UserQueryArgs {
   id: string; 
-}
-export interface SynonymsGreetingArgs {
-  first: number | null; 
-  last: number | null; 
-  before: string | null; 
-  after: string | null; 
-}
-export interface IntroduceGreetingMutationArgs {
-  input: IntroduceGreetingInput; 
 }

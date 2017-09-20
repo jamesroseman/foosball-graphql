@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 
+export * from "./Game";
 export * from "./Team";
 export * from "./User";
 

@@ -1,0 +1,14 @@
+### GAME SCHEMA ###
+
+# Helper types
+type TeamScore {
+  team: Team!
+  value: Int!
+}
+
+# Base Game type
+type Game implements Node {
+  id: ID!
+  losingTeamScore: TeamScore!
+  winningTeamScore: TeamScore!
+}

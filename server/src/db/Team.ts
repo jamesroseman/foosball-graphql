@@ -19,15 +19,22 @@ function modelToType(team: ITeamModel): Promise<Team> {
     const offense: User = values[1];
     return {
       defense,
-      id: team._id,
+      id: team._id.toString(),
       offense,
     } as Team;
   });
 }
+function typeToModel(team: Team): ITeamModel {
+  return {
+    defenseId: team.defense.id,
+    offenseId: team.offense.id,
+  } as ITeamModel;
+}
 
-export function createTeam(team: ITeamModel): Promise<Team> {
+export function createTeam(team: Team): Promise<Team> {
   return TeamModel
-    .create(team)
+    .create(typeToModel(team))
+    // We return the GraphQL representation to the client
     .then(modelToType);
 }
 

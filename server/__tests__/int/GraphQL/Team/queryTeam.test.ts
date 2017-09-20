@@ -13,44 +13,17 @@ import { ITeamModel, IUserModel, TeamModel, UserModel } from "../../../../src/mo
 import { Team, User } from "../../../../src/schema/types";
 
 const server: Server = http.createServer(App);
-let testOffenseModel: IUserModel | null = null;
-let testDefenseModel: IUserModel | null = null;
-let testOffense: User | null = null;
-let testDefense: User | null = null;
-let testTeamModel: ITeamModel | null = null;
 let testTeam: Team | null = null;
 
 describe("Query Team", () => {
   beforeEach(async () => {
-    // Create test user models
-    testOffenseModel = {
-      firstName: "offenseFirstName",
-      lastName: "offenseLastName",
-    } as IUserModel;
-    testDefenseModel = {
-      firstName: "defenseFirstName",
-      lastName: "defenseLastName",
-    } as IUserModel;
-    // Create test users
-    testOffense = await Db.createUser(testOffenseModel);
-    testDefense = await Db.createUser(testDefenseModel);
-    // Create test team model
-    testTeamModel = {
-      defenseId: testDefense.id,
-      offenseId: testOffense.id,
-    } as ITeamModel;
-    // Create test team
-    testTeam = {
-      defense: testDefense,
-      offense: testOffense,
-    } as Team;
+    testTeam = graphQL.testTeamFactory();
   });
 
-  afterEach((done) => {
-    // Clean up the test database
-    UserModel.remove({}, () => { return; });
-    TeamModel.remove({}, done);
-  });
+  // afterEach((done) => {
+  //   // Clean up the test database
+  //   graphQL.clearDatabase(done);
+  // });
 
   it("should get newly created Team by ID", async () => {
     function checkTeamById(team: Team): Promise<Team> {
@@ -61,7 +34,8 @@ describe("Query Team", () => {
               firstName,
               id,
               lastName
-            }
+            },
+            id,
             offense {
               firstName,
               id,
@@ -72,7 +46,10 @@ describe("Query Team", () => {
       return graphQL.queryTeam(server, query);
     }
     // Create team, then query based on its ID
-    const createdTeam: Team = await Db.createTeam(testTeamModel);
+    const createdTeam: Team = await graphQL.createTestTeam(testTeam);
+    testTeam.id = createdTeam.id;
+    testTeam.defense.id = createdTeam.defense.id;
+    testTeam.offense.id = createdTeam.offense.id;
     await expect(checkTeamById(createdTeam)).resolves.toEqual(testTeam);
   });
 });
