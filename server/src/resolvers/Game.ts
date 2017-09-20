@@ -41,6 +41,9 @@ function introduceGame(input: IntroduceGameInput): Promise<IntroduceGamePayload>
       },
     } as Game;
     const createdGame: Game = await Db.createGame(game);
+    // Update teams with new games (modifies stats)
+    await Db.updateTeamWithGame(losingTeam.id, createdGame);
+    await Db.updateTeamWithGame(winningTeam.id, createdGame);
     return {
       clientMutationId: input.clientMutationId,
       game: createdGame,

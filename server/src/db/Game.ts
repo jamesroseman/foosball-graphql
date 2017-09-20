@@ -6,7 +6,7 @@ import * as util from "util";
 import { readTeamById } from "./Team";
 
 // models
-import { GameModel, IGameModel } from "../models";
+import { GameModel, IGameModel, TeamModel } from "../models";
 import { Game, Team, User } from "../schema/types";
 
 // Custom error for Game database transactions

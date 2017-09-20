@@ -7,7 +7,7 @@ import { readUserById } from "./User";
 
 // models
 import { ITeamModel, TeamModel } from "../models";
-import { Team, User } from "../schema/types";
+import { PlayerStats, Team, User } from "../schema/types";
 
 // Custom error for Team database transactions
 function DbTeamError(message: string = "Error in Team Db transaction") {
@@ -78,4 +78,29 @@ export function readTeamById(id: string): Promise<Team> {
       }
       throw err;
     });
+}
+
+export async function updateTeamWithGame(id: string, game: Game): Promise<Team> {
+  if (game.losingTeamScore.team.id !== id && game.winningTeamScore.team.id !== id) {
+    throw new DbTeamError(`Cannot update Team ${id} with unearned Game`);
+  }
+  const didWin: boolean = game.winningTeamScore.team.id === id;
+  const updatedTeam: Team = await readTeamById(id);
+  const stats: PlayerStats = updatedTeam.stats;
+  stats.alltime.defense.played++;
+  stats.alltime.offense.played++;
+  stats.alltime.total.played++;
+  if (didWin) {
+    stats.alltime.defense.won++;
+    stats.alltime.offense.won++;
+    stats.alltime.total.won++;
+  } else {
+    stats.alltime.defense.lost++;
+    stats.alltime.offense.lost++;
+    stats.alltime.total.lost++;
+  }
+  updatedTeam.stats = stats;
+  return await TeamModel
+    .findByIdAndUpdate(id, typeToModel(updatedTeam), { new: true })
+    .then(modelToType);
 }
