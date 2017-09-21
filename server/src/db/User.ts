@@ -1,10 +1,18 @@
 import * as mongoose from "mongoose";
 import { Document, Model } from "mongoose";
+import * as connectionFromMongoCursor from "relay-mongodb-connection";
 import * as util from "util";
+
+// local
+import {
+  modelsToEdges,
+  readDocsAfterCursor,
+  readDocsBeforeCursor,
+} from "./connection";
 
 // models
 import { IUserModel, UserModel } from "../models";
-import { ConnectionArgs, User, UserConnection, UserEdge } from "../schema/types";
+import { ConnectionArgs, PageInfo, User, UserConnection, UserEdge } from "../schema/types";
 
 // Custom error for User database transactions
 function DbUserError(message: string = "Error in User Db transaction") {
@@ -14,17 +22,19 @@ function DbUserError(message: string = "Error in User Db transaction") {
 }
 util.inherits(DbUserError, Error);
 
-// Conversion method between DB model and GraphQL type
-function modelToType(user: IUserModel): User {
+/* Converters */
+
+function modelToType(user: IUserModel): Promise<User> {
   if (!user) {
     throw new DbUserError();
   }
-  return {
+  return Promise.resolve({
     firstName: user.firstName,
     id: user._id.toString(),
     lastName: user.lastName,
-  } as User;
+  } as User);
 }
+
 function typeToModel(user: User): IUserModel {
   if (!user) {
     throw new DbUserError();
@@ -34,6 +44,8 @@ function typeToModel(user: User): IUserModel {
     lastName: user.lastName,
   } as IUserModel;
 }
+
+/* Operations */
 
 export async function createUser(user: User): Promise<User> {
   return UserModel
@@ -61,29 +73,55 @@ export async function readUserById(id: string): Promise<User> {
     });
 }
 
-export async function readUsers(args: ConnectionArgs): Promise<UserConnection> {
+export async function readAllUsers(): Promise<UserConnection> {
   return UserModel
     .find()
     .exec()
-    .then((users: IUserModel[]) => {
-      return users
-        .map(modelToType)
-        .map((user: User) => {
-          return {
-            cursor: user.id,
-            node: user,
-          } as UserEdge;
-        });
-    })
-    .then((edges: UserEdge[]) => {
-      return {
-        edges,
-      } as UserConnection;
+    .then((dbUsers: IUserModel[]) => {
+      const edges: UserEdge[] = modelsToEdges<User>(dbUsers, modelToType);
+      return { edges } as UserConnection;
     })
     .catch((err: Error) => {
       if (err instanceof DbUserError) {
-        throw new DbUserError(`Users not found`);
+        throw new DbUserError("Users not found");
       }
       throw err;
     });
+}
+
+/* Pagination */
+
+async function indexOfUser(id: string): Promise<number> {
+  if (!id) {
+    return Promise.resolve(-1);
+  }
+  return UserModel
+    .find({}, [], { sort: { _id: -1 }})
+    .then((users: IUserModel[]) => {
+      return users.map((user) => user.id);
+    })
+    .then((userIds: string[]) => userIds.indexOf(id));
+}
+
+export async function readUsers(args: ConnectionArgs): Promise<UserConnection> {
+  const sort = { _id: -1 };
+  // If there are no arguments, return all Users
+  if (!args.after && !args.before && !args.first && !args.last) {
+    return readAllUsers();
+  }
+  // Check that any IDs passed in are valid
+  if ((args.before && await indexOfUser(args.before) === -1) ||
+      (args.after && await indexOfUser(args.after) === -1)
+  ) {
+    throw new DbUserError("User ID is invalid");
+  }
+  if ((args.first || args.after) && !args.last && !args.before) {
+    const userIndex: number = await indexOfUser(args.after);
+    return readDocsAfterCursor<User>(UserModel, modelToType, sort, args.first, userIndex);
+  }
+  if ((args.last || args.before) && !args.first && !args.after) {
+    const userIndex: number = await indexOfUser(args.before);
+    return readDocsBeforeCursor<User>(UserModel, modelToType, sort, args.last, userIndex);
+  }
+  throw new DbUserError("Arguments are invalid");
 }

@@ -8,6 +8,16 @@ type Team implements Node {
   stats: PlayerStats!
 }
 
+# Team Queries
+type TeamEdge {
+  node: Team!
+  cursor: ID!
+}
+type TeamConnection {
+  pageInfo: PageInfo
+  edges: [TeamEdge]
+}
+
 # Team Mutations
 input TeamInput {
   offenseUserId: ID!

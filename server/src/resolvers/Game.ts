@@ -1,6 +1,10 @@
 import * as Db from "../db";
+
+// models
 import {
+  ConnectionArgs,
   Game,
+  GameConnection,
   GameQueryArgs,
   IntroduceGameInput,
   IntroduceGameMutationArgs,
@@ -12,6 +16,7 @@ import {
 
 export default {
   game: (args: GameQueryArgs) => getGameById(args.id),
+  games: (args: ConnectionArgs) => getGames(args),
   introduceGame: (args: IntroduceGameMutationArgs) => introduceGame(args.input),
 };
 
@@ -19,6 +24,10 @@ export default {
 
 function getGameById(id: string): Promise<Game> {
   return Db.readGameById(id);
+}
+
+function getGames(args: ConnectionArgs): Promise<GameConnection> {
+  return Db.readGames(args);
 }
 
 /* Mutation */

@@ -10,7 +10,9 @@ export interface Node {
 export interface Query {
   node: Node | null; /* Relay signatures */
   game: Game | null; /* Model signatures */
+  games: GameConnection | null; 
   team: Team | null; 
+  teams: TeamConnection | null; 
   user: User | null; 
   users: UserConnection | null; 
 }
@@ -57,9 +59,9 @@ export interface AggGameStats {
   played: number; 
 }
 
-export interface UserConnection {
+export interface GameConnection {
   pageInfo: PageInfo | null; 
-  edges: UserEdge[] | null; 
+  edges: GameEdge[] | null; 
 }
 
 export interface PageInfo {
@@ -67,6 +69,26 @@ export interface PageInfo {
   hasPreviousPage: boolean; 
   startCursor: string | null; 
   endCursor: string | null; 
+}
+/* Game Queries */
+export interface GameEdge {
+  node: Game; 
+  cursor: string; 
+}
+
+export interface TeamConnection {
+  pageInfo: PageInfo | null; 
+  edges: TeamEdge[] | null; 
+}
+/* Team Queries */
+export interface TeamEdge {
+  node: Team; 
+  cursor: string; 
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo | null; 
+  edges: UserEdge[] | null; 
 }
 /* User Queries */
 export interface UserEdge {
@@ -87,13 +109,6 @@ export interface IntroduceGamePayload {
 export interface IntroduceTeamPayload {
   team: Team; 
   clientMutationId: string; 
-}
-
-export interface ConnectionArgs {
-  first: number | null; 
-  last: number | null; 
-  before: string | null; 
-  after: string | null; 
 }
 
 export interface IntroduceGameInput {
@@ -118,20 +133,42 @@ export interface TeamInput {
   offenseUserId: string; 
   defenseUserId: string; 
 }
+
+export interface ConnectionArgs {
+  first: number | null; 
+  last: number | null; 
+  before: string | null; 
+  after: string | null; 
+}
 export interface NodeQueryArgs {
   id: string; 
 }
 export interface GameQueryArgs {
   id: string; 
 }
+export interface GamesQueryArgs {
+  first: number | null; 
+  after: string | null; 
+  last: number | null; 
+  before: string | null; 
+}
 export interface TeamQueryArgs {
   id: string; 
+}
+export interface TeamsQueryArgs {
+  first: number | null; 
+  after: string | null; 
+  last: number | null; 
+  before: string | null; 
 }
 export interface UserQueryArgs {
   id: string; 
 }
 export interface UsersQueryArgs {
-  args: ConnectionArgs | null; 
+  first: number | null; 
+  after: string | null; 
+  last: number | null; 
+  before: string | null; 
 }
 export interface IntroduceGameMutationArgs {
   input: IntroduceGameInput | null; 

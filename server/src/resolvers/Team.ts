@@ -3,10 +3,12 @@ import { basePlayerStats } from "./defaults";
 
 // models
 import {
+  ConnectionArgs,
   IntroduceTeamInput,
   IntroduceTeamMutationArgs,
   IntroduceTeamPayload,
   Team,
+  TeamConnection,
   TeamQueryArgs,
   User,
 } from "../schema/types";
@@ -16,12 +18,17 @@ import {
 export default {
   introduceTeam: (args: IntroduceTeamMutationArgs) => introduceTeam(args.input),
   team: (args: TeamQueryArgs) => getTeamById(args.id),
+  teams: (args: ConnectionArgs) => getTeams(args),
 };
 
 /* Query */
 
 function getTeamById(id: string): Promise<Team> {
   return Db.readTeamById(id);
+}
+
+function getTeams(args: ConnectionArgs): Promise<TeamConnection> {
+  return Db.readTeams(args);
 }
 
 /* Mutation */

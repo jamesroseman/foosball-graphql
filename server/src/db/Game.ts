@@ -3,11 +3,23 @@ import { Document, Model } from "mongoose";
 import * as util from "util";
 
 // local
+import {
+  modelsToEdges,
+  readDocsAfterCursor,
+  readDocsBeforeCursor,
+} from "./connection";
 import { readTeamById } from "./Team";
 
 // models
 import { GameModel, IGameModel, TeamModel } from "../models";
-import { Game, Team, User } from "../schema/types";
+import {
+  ConnectionArgs,
+  Game,
+  GameConnection,
+  GameEdge,
+  Team,
+  User,
+} from "../schema/types";
 
 // Custom error for Game database transactions
 function DbGameError(message: string = "Error in Game Db transaction") {
@@ -17,7 +29,8 @@ function DbGameError(message: string = "Error in Game Db transaction") {
 }
 util.inherits(DbGameError, Error);
 
-// Conversion method between DB model and GraphQL type
+/* Converters */
+
 function modelToType(game: IGameModel): Promise<Game> {
   if (!game) {
     throw new DbGameError();
@@ -43,6 +56,7 @@ function modelToType(game: IGameModel): Promise<Game> {
     } as Game;
   });
 }
+
 function typeToModel(game: Game): IGameModel {
   if (!game) {
     throw new DbGameError();
@@ -60,6 +74,8 @@ function typeToModel(game: Game): IGameModel {
     },
   } as IGameModel;
 }
+
+/* Operations */
 
 export function createGame(game: Game): Promise<Game> {
   return GameModel
@@ -85,4 +101,57 @@ export function readGameById(id: string): Promise<Game> {
       }
       throw err;
     });
+}
+
+export function readAllGames(): Promise<GameConnection> {
+  return GameModel
+    .find()
+    .exec()
+    .then((dbGames: IGameModel[]) => {
+      const edges: GameEdge[] = modelsToEdges<Game>(dbGames, modelToType);
+      return { edges } as GameConnection;
+    })
+    .catch((err: Error) => {
+      if (err instanceof DbGameError) {
+        throw new DbGameError("Games not found");
+      }
+      throw err;
+    });
+}
+
+/* Pagination */
+
+async function indexOfGame(id: string): Promise<number> {
+  if (!id) {
+    return Promise.resolve(-1);
+  }
+  return GameModel
+    .find({}, [], { sort: { _id: -1 }})
+    .then((games: IGameModel[]) => {
+      return games.map((game) => game.id);
+    })
+    .then((gameIds: string[]) => gameIds.indexOf(id));
+}
+
+export async function readGames(args: ConnectionArgs): Promise<GameConnection> {
+  const sort = { _id: -1 };
+  // If there are no arguments, return all Teams
+  if (!args.after && !args.before && !args.first && !args.last) {
+    return readAllGames();
+  }
+  // Check that any IDs passed in are valid
+  if ((args.before && await indexOfGame(args.before) === -1) ||
+      (args.after && await indexOfGame(args.after) === -1)
+  ) {
+    throw new DbGameError("Game ID is invalid");
+  }
+  if ((args.first || args.after) && !args.last && !args.before) {
+    const gameIndex: number = await indexOfGame(args.after);
+    return readDocsAfterCursor<Game>(GameModel, modelToType, sort, args.first, gameIndex);
+  }
+  if ((args.last || args.before) && !args.first && !args.after) {
+    const gameIndex: number = await indexOfGame(args.before);
+    return readDocsBeforeCursor<Game>(GameModel, modelToType, sort, args.last, gameIndex);
+  }
+  throw new DbGameError("Arguments are invalid");
 }

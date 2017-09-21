@@ -15,6 +15,16 @@ type Game implements Node {
   endDate: String!
 }
 
+# Game Queries
+type GameEdge {
+  node: Game!
+  cursor: ID!
+}
+type GameConnection {
+  pageInfo: PageInfo
+  edges: [GameEdge]
+}
+
 # Game Mutations
 input GameInput {
   losingTeamId: ID!
