@@ -38,7 +38,7 @@ gulp.task('transpile', () => {
 });
 
 gulp.task('watch', ['transpile'], () => {
-  gulp.watch('src/**/*.ts', ['transpile', 'copy-schemas']);
+  gulp.watch('src/**/*.ts', ['transpile']);
 });
 
 gulp.task('assets', function() {

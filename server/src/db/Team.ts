@@ -97,9 +97,9 @@ export function readTeamById(id: string): Promise<Team> {
     });
 }
 
-export function readAllTeams(): Promise<TeamConnection> {
+export function readAllTeams(sort: any = {}): Promise<TeamConnection> {
   return TeamModel
-    .find()
+    .find({}, [], { sort })
     .exec()
     .then((dbTeams: ITeamModel[]) => {
       const edges: TeamEdge[] = modelsToEdges<Team>(dbTeams, modelToType);
@@ -156,7 +156,7 @@ export async function readTeams(args: ConnectionArgs): Promise<TeamConnection> {
   const sort = { _id: -1 };
   // If there are no arguments, return all Teams
   if (!args.after && !args.before && !args.first && !args.last) {
-    return readAllTeams();
+    return readAllTeams(sort);
   }
   // Check that any IDs passed in are valid
   if ((args.before && await indexOfTeam(args.before) === -1) ||

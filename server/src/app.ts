@@ -1,5 +1,6 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
+import { Router } from "express";
 import * as graphqlHTTP from "express-graphql";
 import * as mongoose from "mongoose";
 import * as logger from "morgan";
@@ -78,7 +79,7 @@ class App {
 
     // Direct traffic to front-end app
     // Note: This must come last
-    this.express.use(express.static(path.join(__dirname, "./../../app/public")));
+    this.express.use(express.static(path.join(__dirname, "../../../app/public")));
   }
 
 }

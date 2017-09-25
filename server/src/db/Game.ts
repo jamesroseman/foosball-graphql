@@ -103,9 +103,9 @@ export function readGameById(id: string): Promise<Game> {
     });
 }
 
-export function readAllGames(): Promise<GameConnection> {
+export function readAllGames(sort: any = {}): Promise<GameConnection> {
   return GameModel
-    .find()
+    .find({}, [], { sort })
     .exec()
     .then((dbGames: IGameModel[]) => {
       const edges: GameEdge[] = modelsToEdges<Game>(dbGames, modelToType);
@@ -137,7 +137,7 @@ export async function readGames(args: ConnectionArgs): Promise<GameConnection> {
   const sort = { _id: -1 };
   // If there are no arguments, return all Teams
   if (!args.after && !args.before && !args.first && !args.last) {
-    return readAllGames();
+    return readAllGames(sort);
   }
   // Check that any IDs passed in are valid
   if ((args.before && await indexOfGame(args.before) === -1) ||

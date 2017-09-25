@@ -1,0 +1,27 @@
+.pen {
+  margin: auto;
+  overflow: scroll;
+  width: 750px;
+}
+
+.selectedUsers {
+  margin: auto;
+  margin-top: 25px;
+  width: 500px;
+  height: 130px;
+  background-color: #bbb;
+}
+
+.clearBtn {
+  margin-right: 10px;
+}
+
+.nextBtn {
+  margin-left: 10px;
+}
+
+.nextBtnParent {
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}

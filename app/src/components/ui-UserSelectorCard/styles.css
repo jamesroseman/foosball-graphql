@@ -1,0 +1,22 @@
+.buttonBase {
+  padding: 0;
+  margin: 10px 5px 10px 5px;
+}
+
+.base {
+  width: 100px;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.selected {
+  background-color: #ddd;
+}
+
+.unselectable {
+  cursor: not-allowed;
+}
+
+.media {
+  height: 50px;
+}

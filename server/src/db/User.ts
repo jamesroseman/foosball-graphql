@@ -73,9 +73,9 @@ export async function readUserById(id: string): Promise<User> {
     });
 }
 
-export async function readAllUsers(): Promise<UserConnection> {
+export async function readAllUsers(sort: any = {}): Promise<UserConnection> {
   return UserModel
-    .find()
+    .find({}, [], { sort })
     .exec()
     .then((dbUsers: IUserModel[]) => {
       const edges: UserEdge[] = modelsToEdges<User>(dbUsers, modelToType);
@@ -107,7 +107,7 @@ export async function readUsers(args: ConnectionArgs): Promise<UserConnection> {
   const sort = { _id: -1 };
   // If there are no arguments, return all Users
   if (!args.after && !args.before && !args.first && !args.last) {
-    return readAllUsers();
+    return readAllUsers(sort);
   }
   // Check that any IDs passed in are valid
   if ((args.before && await indexOfUser(args.before) === -1) ||

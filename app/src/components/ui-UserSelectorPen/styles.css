@@ -1,0 +1,6 @@
+.pen {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #bbb;
+  justify-content: space-between;
+}
