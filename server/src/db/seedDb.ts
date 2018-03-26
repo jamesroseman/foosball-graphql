@@ -3,6 +3,7 @@ import {
   Game,
   GameConnection,
   GameEdge,
+  PlayerStats,
   Team,
   TeamScore,
   TeamStats,
@@ -20,6 +21,9 @@ import { createUser, readUsers } from "./User";
 const AMOUNT_OF_USERS = 16;
 const AMOUNT_OF_TEAMS = 8;
 const AMOUNT_OF_GAMES = 200;
+const WILL_WRITE_USERS: boolean = false;
+const WILL_WRITE_TEAMS: boolean = false;
+const WILL_WRITE_GAMES: boolean = false;
 
 // Get the DB address
 const dbAddr: string | null = process.env.DB_ADDR;
@@ -44,6 +48,20 @@ const camelize = (toCamelize: string) => {
   return toCamelize.charAt(0) + toCamelize.slice(1).toLowerCase();
 };
 
+const defaultAggStats = {
+  lost: 0,
+  played: 0,
+  won: 0,
+};
+
+const defaultPlayerStats: PlayerStats = {
+  alltime: {
+    defense: defaultAggStats,
+    offense: defaultAggStats,
+    total: defaultAggStats,
+  },
+} as PlayerStats;
+
 const { firstNames, lastNames } = seedData;
 const usersToWrite: User[] = new Array(AMOUNT_OF_USERS)
   .fill(0)
@@ -51,13 +69,9 @@ const usersToWrite: User[] = new Array(AMOUNT_OF_USERS)
     firstName: camelize(firstNames[getRandomIndex(firstNames.length)]),
     id: "NA",
     lastName: camelize(lastNames[getRandomIndex(lastNames.length)]),
+    stats: defaultPlayerStats,
   } as User));
 
-const defaultAggStats = {
-  lost: 0,
-  played: 0,
-  won: 0,
-};
 const defaultTeamStats: TeamStats = {
   alltime: defaultAggStats,
 } as TeamStats;
@@ -91,20 +105,18 @@ async function readFromDatabase(readFn: any) {
 
 async function writeToDatabase(writeFn: any, toWrites: any[], shouldWrite: boolean) {
   if (shouldWrite) {
-    return toWrites.reduce((p, x) => p.then(async (i: any) => await writeFn(x)), Promise.resolve());
+    return toWrites
+      .reduce((p, x) => p.then(async (i: any) => await writeFn(x)), Promise.resolve())
+      .catch((e: any) => console.error("Failed to write: " + e));
   } else {
     return;
   }
 }
 
-const writeUsers: boolean = true;
-const writeTeams: boolean = true;
-const writeGames: boolean = true;
-
 async function writeModelsToDb() {
   await initialize(dbAddr);
   // Users
-  await writeToDatabase(createUser, usersToWrite, writeUsers);
+  await writeToDatabase(createUser, usersToWrite, WILL_WRITE_USERS);
   const users: User[] = await readFromDatabase(readUsers);
   console.log(users.length + " users written to DB.");
   // Teams
@@ -116,14 +128,14 @@ async function writeModelsToDb() {
       offense: users[getRandomIndex(users.length)],
       stats: defaultTeamStats,
     } as Team));
-  await writeToDatabase(createTeam, teamsToWrite, writeTeams);
+  await writeToDatabase(createTeam, teamsToWrite, WILL_WRITE_TEAMS);
   const teams: Team[] = await readFromDatabase(readTeams);
   console.log(teams.length + " teams written to DB.");
   // Games
   const gamesToWrite: Game[] = new Array(AMOUNT_OF_GAMES)
     .fill(0)
     .map((e) => generateRandomGame(teams[getRandomIndex(teams.length)], teams[getRandomIndex(teams.length)]));
-  await writeToDatabase(createGame, gamesToWrite, writeGames);
+  await writeToDatabase(createGame, gamesToWrite, WILL_WRITE_GAMES);
   const games: Game[] = await readFromDatabase(readGames);
   console.log(games.length + " games written to DB.");
   close();

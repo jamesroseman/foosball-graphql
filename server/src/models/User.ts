@@ -5,9 +5,14 @@ import * as mongoosePaginate from "mongoose-paginate";
 // Overwrite mpromises
 (mongoose as any).Promise = global.Promise;
 
+// models
+import { PlayerStats } from "../schema/types";
+import { PlayerStatsSchema } from "./Analytics";
+
 export interface IUserModel extends Document {
   firstName: string;
   lastName: string;
+  stats: PlayerStats;
 }
 
 export const UserSchema: Schema = new Schema({
@@ -18,6 +23,10 @@ export const UserSchema: Schema = new Schema({
   lastName: {
     required: true,
     type: String,
+  },
+  stats: {
+    required: true,
+    type: PlayerStatsSchema,
   },
 });
 

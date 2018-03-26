@@ -5,6 +5,7 @@ type User implements Node {
   id: ID!
   firstName: String!
   lastName: String!
+  stats: PlayerStats!
 }
 
 # User Queries

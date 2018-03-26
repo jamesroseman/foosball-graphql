@@ -12,7 +12,7 @@ import {
 
 // models
 import { IUserModel, UserModel } from "../models";
-import { ConnectionArgs, PageInfo, User, UserConnection, UserEdge } from "../schema/types";
+import { ConnectionArgs, PageInfo, PlayerStats, User, UserConnection, UserEdge } from "../schema/types";
 
 // Custom error for User database transactions
 function DbUserError(message: string = "Error in User Db transaction") {
@@ -32,6 +32,7 @@ function modelToType(user: IUserModel): Promise<User> {
     firstName: user.firstName,
     id: user._id.toString(),
     lastName: user.lastName,
+    stats: user.stats,
   } as User);
 }
 
@@ -42,6 +43,7 @@ function typeToModel(user: User): IUserModel {
   return {
     firstName: user.firstName,
     lastName: user.lastName,
+    stats: user.stats,
   } as IUserModel;
 }
 
@@ -87,6 +89,51 @@ export async function readAllUsers(sort: any = {}): Promise<UserConnection> {
       }
       throw err;
     });
+}
+
+export async function updateUserWithGame(id: string, game: Game): Promise<User> {
+  if (
+    game.losingTeamScore.team.offense.id !== id &&
+    game.losingTeamScore.team.defense.id !== id &&
+    game.winningTeamScore.team.offense.id !== id &&
+    game.winningTeamScore.team.defense.id !== id
+  ) {
+    throw new DbUserError(`Cannot update User ${id} with unearned Game`);
+  }
+  const isOffense: boolean =
+    game.winningTeamScore.team.offense.id === id ||
+    game.losingTeamScore.team.defense.id === id;
+  const didWin: boolean =
+    game.winningTeamScore.team.offense.id === id ||
+    game.winningTeamScore.team.defense.id === id;
+  const updatedUser: User = await readUserById(id);
+  const stats: PlayerStats = updatedUser.stats;
+  // Update stats
+  stats.alltime.total.played++;
+  if (isOffense) {
+    stats.alltime.offense.played++;
+  } else {
+    stats.alltime.defense.played++;
+  }
+  if (didWin) {
+    stats.alltime.total.won++;
+    if (isOffense) {
+      stats.alltime.offense.won++;
+    } else {
+      stats.alltime.defense.won++;
+    }
+  } else {
+    stats.alltime.total.lost++;
+    if (isOffense) {
+      stats.alltime.offense.lost++;
+    } else {
+      stats.alltime.defense.lost++;
+    }
+  }
+  updatedUser.stats = stats;
+  return await UserModel
+    .findByIdAndUpdate(id, typeToModel(updatedUser), { new: true })
+    .then(modelToType);
 }
 
 /* Pagination */

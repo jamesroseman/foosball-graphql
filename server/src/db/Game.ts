@@ -9,6 +9,7 @@ import {
   readDocsBeforeCursor,
 } from "./connection";
 import { readTeamById, updateTeamWithGame } from "./Team";
+import { readUserById, updateUserWithGame } from "./User";
 
 // models
 import { GameModel, IGameModel, TeamModel } from "../models";
@@ -85,8 +86,14 @@ export async function createGame(game: Game): Promise<Game> {
   ]).then(async (teams) => {
     const losingTeam: Team = teams[0];
     const winningTeam: Team = teams[1];
+    // Update team with new stats for this game
     await updateTeamWithGame(losingTeam.id, game);
     await updateTeamWithGame(winningTeam.id, game);
+    // Update users with new stats for this game
+    await updateUserWithGame(losingTeam.offense.id, game);
+    await updateUserWithGame(losingTeam.defense.id, game);
+    await updateUserWithGame(winningTeam.offense.id, game);
+    await updateUserWithGame(winningTeam.defense.id, game);
   });
   return GameModel
     .create(typeToModel(game))

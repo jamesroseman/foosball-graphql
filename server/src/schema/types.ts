@@ -41,16 +41,27 @@ export interface User extends Node {
   id: string;
   firstName: string;
   lastName: string;
+  stats: PlayerStats;
 }
 
-export interface TeamStats {
-  alltime: AggGameStats;
+export interface PlayerStats {
+  alltime: AggPlayerStats;
+}
+
+export interface AggPlayerStats {
+  total: AggGameStats;
+  offense: AggGameStats;
+  defense: AggGameStats;
 }
 /* Helper types */
 export interface AggGameStats {
   won: number;
   lost: number;
   played: number;
+}
+
+export interface TeamStats {
+  alltime: AggGameStats;
 }
 
 export interface GameConnection {
@@ -103,16 +114,6 @@ export interface IntroduceGamePayload {
 export interface IntroduceTeamPayload {
   team: Team;
   clientMutationId: string;
-}
-
-export interface AggPlayerStats {
-  total: AggGameStats;
-  offense: AggGameStats;
-  defense: AggGameStats;
-}
-
-export interface PlayerStats {
-  alltime: AggPlayerStats;
 }
 
 export interface IntroduceGameInput {
