@@ -6,13 +6,13 @@ import * as mongoosePaginate from "mongoose-paginate";
 (mongoose as any).Promise = global.Promise;
 
 // models
-import { PlayerStats } from "../schema/types";
-import { PlayerStatsSchema } from "./Analytics";
+import { TeamStats } from "../schema/types";
+import { TeamStatsSchema } from "./Analytics";
 
 export interface ITeamModel extends Document {
   defenseId: string;
   offenseId: string;
-  stats: PlayerStats;
+  stats: TeamStats;
 }
 
 export const TeamSchema: Schema = new Schema({
@@ -26,7 +26,7 @@ export const TeamSchema: Schema = new Schema({
   },
   stats: {
     required: true,
-    type: PlayerStatsSchema,
+    type: TeamStatsSchema,
   },
 });
 

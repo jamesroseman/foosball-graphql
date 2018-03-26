@@ -3,9 +3,9 @@ import {
   Game,
   GameConnection,
   GameEdge,
-  PlayerStats,
   Team,
   TeamScore,
+  TeamStats,
   User,
   UserConnection,
 } from "../schema/types";
@@ -58,13 +58,9 @@ const defaultAggStats = {
   played: 0,
   won: 0,
 };
-const defaultPlayerStats: PlayerStats = {
-  alltime: {
-    defense: defaultAggStats,
-    offense: defaultAggStats,
-    total: defaultAggStats,
-  },
-} as PlayerStats;
+const defaultTeamStats: TeamStats = {
+  alltime: defaultAggStats,
+} as TeamStats;
 
 const generateRandomGame = (winningTeam: Team, losingTeam: Team) => {
   const today: Date = new Date();
@@ -118,7 +114,7 @@ async function writeModelsToDb() {
       defense: users[getRandomIndex(users.length)],
       id: "NA",
       offense: users[getRandomIndex(users.length)],
-      stats: defaultPlayerStats,
+      stats: defaultTeamStats,
     } as Team));
   await writeToDatabase(createTeam, teamsToWrite, writeTeams);
   const teams: Team[] = await readFromDatabase(readTeams);

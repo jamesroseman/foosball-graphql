@@ -16,10 +16,10 @@ import {
   ConnectionArgs,
   Game,
   PageInfo,
-  PlayerStats,
   Team,
   TeamConnection,
   TeamEdge,
+  TeamStats,
   User,
 } from "../schema/types";
 
@@ -119,18 +119,12 @@ export async function updateTeamWithGame(id: string, game: Game): Promise<Team> 
   }
   const didWin: boolean = game.winningTeamScore.team.id === id;
   const updatedTeam: Team = await readTeamById(id);
-  const stats: PlayerStats = updatedTeam.stats;
-  stats.alltime.defense.played++;
-  stats.alltime.offense.played++;
-  stats.alltime.total.played++;
+  const stats: TeamStats = updatedTeam.stats;
+  stats.alltime.played++;
   if (didWin) {
-    stats.alltime.defense.won++;
-    stats.alltime.offense.won++;
-    stats.alltime.total.won++;
+    stats.alltime.won++;
   } else {
-    stats.alltime.defense.lost++;
-    stats.alltime.offense.lost++;
-    stats.alltime.total.lost++;
+    stats.alltime.lost++;
   }
   updatedTeam.stats = stats;
   return await TeamModel

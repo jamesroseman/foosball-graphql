@@ -5,7 +5,7 @@ type Team implements Node {
   id: ID!
   offense: User!
   defense: User!
-  stats: PlayerStats!
+  stats: TeamStats!
 }
 
 # Team Queries

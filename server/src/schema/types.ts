@@ -34,7 +34,7 @@ export interface Team extends Node {
   id: string;
   offense: User;
   defense: User;
-  stats: PlayerStats;
+  stats: TeamStats;
 }
 /* Base User type */
 export interface User extends Node {
@@ -43,14 +43,8 @@ export interface User extends Node {
   lastName: string;
 }
 
-export interface PlayerStats {
-  alltime: AggPlayerStats;
-}
-
-export interface AggPlayerStats {
-  total: AggGameStats;
-  offense: AggGameStats;
-  defense: AggGameStats;
+export interface TeamStats {
+  alltime: AggGameStats;
 }
 /* Helper types */
 export interface AggGameStats {
@@ -109,6 +103,16 @@ export interface IntroduceGamePayload {
 export interface IntroduceTeamPayload {
   team: Team;
   clientMutationId: string;
+}
+
+export interface AggPlayerStats {
+  total: AggGameStats;
+  offense: AggGameStats;
+  defense: AggGameStats;
+}
+
+export interface PlayerStats {
+  alltime: AggPlayerStats;
 }
 
 export interface IntroduceGameInput {

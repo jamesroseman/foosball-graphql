@@ -59,3 +59,14 @@ export const PlayerStatsSchema: Schema = new Schema({
     type: AggPlayerStatsSchema,
   },
 });
+
+export interface ITeamStats {
+  alltime: IAggGameStats;
+}
+
+export const TeamStatsSchema: Schema = new Schema({
+  alltime: {
+    required: true,
+    type: AggGameStatsSchema,
+  },
+});
