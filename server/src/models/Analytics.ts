@@ -1,6 +1,9 @@
 import * as mongoose from "mongoose";
 import { Schema } from "mongoose";
 
+// Overwrite mpromises
+(mongoose as any).Promise = global.Promise;
+
 interface IAggGameStats {
   won: number;
   lost: number;

@@ -23,7 +23,7 @@ export default class UserSelectorPen extends React.Component {
   }
 
   render() {
-    const selectCt = Array.from(this.props.selectedUsersMap.values()).length;
+    const selectCt = selectedUsersMap.keys().length; Array.from(this.props.selectedUsersMap.values()).length;
     const childrenWithProps = React.Children.map(this.props.children,
      (child) => React.cloneElement(child, {
        ...this.props,

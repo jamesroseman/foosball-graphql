@@ -2,6 +2,9 @@ import * as mongoose from "mongoose";
 import { Document, Model, Schema } from "mongoose";
 import * as mongoosePaginate from "mongoose-paginate";
 
+// Overwrite mpromises
+(mongoose as any).Promise = global.Promise;
+
 export interface IUserModel extends Document {
   firstName: string;
   lastName: string;

@@ -8,7 +8,7 @@ import {
   readDocsAfterCursor,
   readDocsBeforeCursor,
 } from "./connection";
-import { readTeamById } from "./Team";
+import { readTeamById, updateTeamWithGame } from "./Team";
 
 // models
 import { GameModel, IGameModel, TeamModel } from "../models";
@@ -77,7 +77,17 @@ function typeToModel(game: Game): IGameModel {
 
 /* Operations */
 
-export function createGame(game: Game): Promise<Game> {
+export async function createGame(game: Game): Promise<Game> {
+  // We update the team stats for the teams in the game
+  await Promise.all([
+    readTeamById(game.losingTeamScore.team.id),
+    readTeamById(game.winningTeamScore.team.id),
+  ]).then(async (teams) => {
+    const losingTeam: Team = teams[0];
+    const winningTeam: Team = teams[1];
+    await updateTeamWithGame(losingTeam.id, game);
+    await updateTeamWithGame(winningTeam.id, game);
+  });
   return GameModel
     .create(typeToModel(game))
     // We return the GraphQL representation to the client

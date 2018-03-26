@@ -2,6 +2,9 @@ import * as mongoose from "mongoose";
 import { Document, Model, Schema } from "mongoose";
 import * as mongoosePaginate from "mongoose-paginate";
 
+// Overwrite mpromises
+(mongoose as any).Promise = global.Promise;
+
 // models
 import { Date, Team } from "../schema/types";
 import { ITeamModel } from "./Team";
