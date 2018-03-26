@@ -45,23 +45,26 @@ export interface User extends Node {
 }
 
 export interface PlayerStats {
-  alltime: AggPlayerStats;
+  alltime: PlayerAnalytics;
 }
 
-export interface AggPlayerStats {
-  total: AggGameStats;
-  offense: AggGameStats;
-  defense: AggGameStats;
+export interface PlayerAnalytics {
+  total: PerfAnalytics;
+  offense: PerfAnalytics;
+  defense: PerfAnalytics;
 }
 /* Helper types */
-export interface AggGameStats {
-  won: number;
-  lost: number;
+export interface PerfAnalytics {
+  wins: number;
+  winPercentage: number;
+  losses: number;
+  lossPercentage: number;
   played: number;
+  rating?: number | null;
 }
 
 export interface TeamStats {
-  alltime: AggGameStats;
+  alltime: PerfAnalytics;
 }
 
 export interface GameConnection {

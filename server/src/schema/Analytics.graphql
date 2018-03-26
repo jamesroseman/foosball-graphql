@@ -1,19 +1,25 @@
 ### ANALYTICS SCHEMA ###
 
 # Helper types
-type AggGameStats {
-  won: Int!
-  lost: Int!
+type PerfAnalytics {
+  wins: Int!
+  winPercentage: Float!
+  losses: Int!
+  lossPercentage: Float!
   played: Int!
+  rating: Int
 }
-type AggPlayerStats {
-  total: AggGameStats!
-  offense: AggGameStats!
-  defense: AggGameStats!
+
+type PlayerAnalytics {
+  total: PerfAnalytics!
+  offense: PerfAnalytics!
+  defense: PerfAnalytics!
 }
+
 type PlayerStats {
-  alltime: AggPlayerStats!
+  alltime: PlayerAnalytics!
 }
+
 type TeamStats {
-  alltime: AggGameStats!
+  alltime: PerfAnalytics!
 }

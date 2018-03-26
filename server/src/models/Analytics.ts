@@ -4,14 +4,22 @@ import { Schema } from "mongoose";
 // Overwrite mpromises
 (mongoose as any).Promise = global.Promise;
 
-interface IAggGameStats {
-  won: number;
-  lost: number;
+interface IPerfAnalytics {
+  wins: number;
+  winPercentage: number;
+  losses: number;
+  lossPercentage: number;
   played: number;
+  rating: number;
 }
 
-const AggGameStatsSchema: Schema = new Schema({
-  lost: {
+const PerfAnalyticsSchema: Schema = new Schema({
+  lossPercentage: {
+    default: 0,
+    required: true,
+    type: Number,
+  },
+  losses: {
     default: 0,
     required: true,
     type: Number,
@@ -21,52 +29,62 @@ const AggGameStatsSchema: Schema = new Schema({
     required: true,
     type: Number,
   },
-  won: {
+  rating: {
+    default: 0,
+    required: true,
+    type: Number,
+  },
+  winPercentage: {
+    default: 0,
+    required: true,
+    type: Number,
+  },
+  wins: {
     default: 0,
     required: true,
     type: Number,
   },
 });
 
-interface IAggPlayerStats {
-  total: IAggGameStats;
-  offense: IAggGameStats;
-  defense: IAggGameStats;
+interface IPlayerAnalytics {
+  total: IPerfAnalytics;
+  offense: IPerfAnalytics;
+  defense: IPerfAnalytics;
 }
 
-const AggPlayerStatsSchema: Schema = new Schema({
+const PlayerAnalyticsSchema: Schema = new Schema({
   defense: {
     required: true,
-    type: AggGameStatsSchema,
+    type: PerfAnalyticsSchema,
   },
   offense: {
     required: true,
-    type: AggGameStatsSchema,
+    type: PerfAnalyticsSchema,
   },
   total: {
     required: true,
-    type: AggGameStatsSchema,
+    type: PerfAnalyticsSchema,
   },
 });
 
 export interface IPlayerStats {
-  alltime: IAggPlayerStats;
+  alltime: IPlayerAnalytics;
 }
 
 export const PlayerStatsSchema: Schema = new Schema({
   alltime: {
     required: true,
-    type: AggPlayerStatsSchema,
+    type: PlayerAnalyticsSchema,
   },
 });
 
 export interface ITeamStats {
-  alltime: IAggGameStats;
+  alltime: IPerfAnalytics;
 }
 
 export const TeamStatsSchema: Schema = new Schema({
   alltime: {
     required: true,
-    type: AggGameStatsSchema,
+    type: PerfAnalyticsSchema,
   },
 });

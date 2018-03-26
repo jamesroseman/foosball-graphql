@@ -120,12 +120,16 @@ export async function updateTeamWithGame(id: string, game: Game): Promise<Team> 
   const didWin: boolean = game.winningTeamScore.team.id === id;
   const updatedTeam: Team = await readTeamById(id);
   const stats: TeamStats = updatedTeam.stats;
+  // Update count stats
   stats.alltime.played++;
   if (didWin) {
-    stats.alltime.won++;
+    stats.alltime.wins++;
   } else {
-    stats.alltime.lost++;
+    stats.alltime.losses++;
   }
+  // Update computed stats
+  stats.alltime.winPercentage = stats.alltime.wins / stats.alltime.played;
+  stats.alltime.lossPercentage = stats.alltime.losses / stats.alltime.played;
   updatedTeam.stats = stats;
   return await TeamModel
     .findByIdAndUpdate(id, typeToModel(updatedTeam), { new: true })

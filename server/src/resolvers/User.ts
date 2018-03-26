@@ -1,5 +1,5 @@
+import { generateBaseUser } from "../constants";
 import * as Db from "../db";
-import { basePlayerStats } from "./defaults";
 
 // models
 import {
@@ -39,11 +39,7 @@ function introduceUser(
   input: IntroduceUserInput,
 ): Promise<IntroduceUserPayload> {
     const { firstName, lastName } = input.userInput;
-    const user: User = {
-      firstName,
-      lastName,
-      stats: basePlayerStats,
-    } as User;
+    const user: User = generateBaseUser(firstName, lastName);
     return Db
       .createUser(user)
       .then((createdUser: User) => ({

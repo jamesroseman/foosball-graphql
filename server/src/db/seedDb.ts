@@ -17,6 +17,8 @@ import { close, initialize } from "./index";
 import { createTeam, readTeams } from "./Team";
 import { createUser, readUsers } from "./User";
 
+import { generateBaseTeam, generateBaseUser } from "../constants";
+
 // Constants
 const AMOUNT_OF_USERS = 16;
 const AMOUNT_OF_TEAMS = 8;
@@ -48,33 +50,16 @@ const camelize = (toCamelize: string) => {
   return toCamelize.charAt(0) + toCamelize.slice(1).toLowerCase();
 };
 
-const defaultAggStats = {
-  lost: 0,
-  played: 0,
-  won: 0,
-};
-
-const defaultPlayerStats: PlayerStats = {
-  alltime: {
-    defense: defaultAggStats,
-    offense: defaultAggStats,
-    total: defaultAggStats,
-  },
-} as PlayerStats;
-
 const { firstNames, lastNames } = seedData;
 const usersToWrite: User[] = new Array(AMOUNT_OF_USERS)
   .fill(0)
-  .map((e) => ({
-    firstName: camelize(firstNames[getRandomIndex(firstNames.length)]),
-    id: "NA",
-    lastName: camelize(lastNames[getRandomIndex(lastNames.length)]),
-    stats: defaultPlayerStats,
-  } as User));
-
-const defaultTeamStats: TeamStats = {
-  alltime: defaultAggStats,
-} as TeamStats;
+  .map((_) => {
+    const firstName: string =
+      camelize(firstNames[getRandomIndex(firstNames.length)]);
+    const lastName: string =
+      camelize(lastNames[getRandomIndex(lastNames.length)]);
+    return generateBaseUser(firstName, lastName);
+  });
 
 const generateRandomGame = (winningTeam: Team, losingTeam: Team) => {
   const today: Date = new Date();
@@ -122,12 +107,11 @@ async function writeModelsToDb() {
   // Teams
   const teamsToWrite: Team[] = new Array(AMOUNT_OF_TEAMS)
     .fill(0)
-    .map((e) => ({
-      defense: users[getRandomIndex(users.length)],
-      id: "NA",
-      offense: users[getRandomIndex(users.length)],
-      stats: defaultTeamStats,
-    } as Team));
+    .map((_) => {
+      const defense: User = users[getRandomIndex(users.length)];
+      const offense: User = users[getRandomIndex(users.length)];
+      return generateBaseTeam(defense, offense);
+    });
   await writeToDatabase(createTeam, teamsToWrite, WILL_WRITE_TEAMS);
   const teams: Team[] = await readFromDatabase(readTeams);
   console.log(teams.length + " teams written to DB.");

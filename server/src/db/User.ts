@@ -116,7 +116,7 @@ export async function updateUserWithGame(id: string, game: Game): Promise<User> 
     game.winningTeamScore.team.defense.id === id;
   const updatedUser: User = await readUserById(id);
   const stats: PlayerStats = updatedUser.stats;
-  // Update stats
+  // Update count stats
   stats.alltime.total.played++;
   if (isOffense) {
     stats.alltime.offense.played++;
@@ -124,20 +124,30 @@ export async function updateUserWithGame(id: string, game: Game): Promise<User> 
     stats.alltime.defense.played++;
   }
   if (didWin) {
-    stats.alltime.total.won++;
+    stats.alltime.total.wins++;
     if (isOffense) {
-      stats.alltime.offense.won++;
+      stats.alltime.offense.wins++;
     } else {
-      stats.alltime.defense.won++;
+      stats.alltime.defense.wins++;
     }
   } else {
-    stats.alltime.total.lost++;
+    stats.alltime.total.losses++;
     if (isOffense) {
-      stats.alltime.offense.lost++;
+      stats.alltime.offense.losses++;
     } else {
-      stats.alltime.defense.lost++;
+      stats.alltime.defense.losses++;
     }
   }
+  // Update computed stats
+  const defStats = stats.alltime.defense;
+  stats.alltime.defense.winPercentage = defStats.wins / defStats.played;
+  stats.alltime.defense.lossPercentage = defStats.losses / defStats.played;
+  const offStats = stats.alltime.offense;
+  stats.alltime.offense.winPercentage = offStats.wins / offStats.played;
+  stats.alltime.offense.lossPercentage = offStats.losses / offStats.played;
+  const totStats = stats.alltime.total;
+  stats.alltime.total.winPercentage = totStats.wins / totStats.played;
+  stats.alltime.total.lossPercentage = totStats.losses / totStats.played;
   updatedUser.stats = stats;
   return await UserModel
     .findByIdAndUpdate(id, typeToModel(updatedUser), { new: true })
