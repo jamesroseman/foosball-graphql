@@ -17,3 +17,17 @@ type UserConnection {
   pageInfo: PageInfo
   edges: [UserEdge]
 }
+
+# User Mutations
+input UserInput {
+  firstName: String!
+  lastName: String!
+}
+input IntroduceUserInput {
+  userInput: UserInput!
+  clientMutationId: String!
+}
+type IntroduceUserPayload {
+  user: User!
+  clientMutationId: String!
+}

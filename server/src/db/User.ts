@@ -12,7 +12,15 @@ import {
 
 // models
 import { IUserModel, UserModel } from "../models";
-import { ConnectionArgs, PageInfo, PlayerStats, User, UserConnection, UserEdge } from "../schema/types";
+import {
+  ConnectionArgs,
+  Game,
+  PageInfo,
+  PlayerStats,
+  User,
+  UserConnection,
+  UserEdge,
+} from "../schema/types";
 
 // Custom error for User database transactions
 function DbUserError(message: string = "Error in User Db transaction") {

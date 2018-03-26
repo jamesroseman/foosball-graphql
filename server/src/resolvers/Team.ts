@@ -1,5 +1,5 @@
 import * as Db from "../db";
-import { basePlayerStats } from "./defaults";
+import { baseTeamStats } from "./defaults";
 
 // models
 import {
@@ -33,7 +33,9 @@ function getTeams(args: ConnectionArgs): Promise<TeamConnection> {
 
 /* Mutation */
 
-function introduceTeam(input: IntroduceTeamInput): Promise<IntroduceTeamPayload> {
+function introduceTeam(
+  input: IntroduceTeamInput,
+): Promise<IntroduceTeamPayload> {
   return Promise.all([
     Db.readUserById(input.teamInput.offenseUserId),
     Db.readUserById(input.teamInput.defenseUserId),
@@ -43,7 +45,7 @@ function introduceTeam(input: IntroduceTeamInput): Promise<IntroduceTeamPayload>
     const team: Team = {
       defense: defenseUser,
       offense: offenseUser,
-      stats: basePlayerStats,
+      stats: baseTeamStats,
     } as Team;
     const createdTeam: Team = await Db.createTeam(team);
     return {

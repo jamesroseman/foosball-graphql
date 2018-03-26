@@ -39,5 +39,6 @@ type Query {
 type Mutation {
   introduceGame(input: IntroduceGameInput): IntroduceGamePayload,
   introduceTeam(input: IntroduceTeamInput): IntroduceTeamPayload,
+  introduceUser(input: IntroduceUserInput): IntroduceUserPayload,
   ## Add new model mutation signatures above this comment ##
 }

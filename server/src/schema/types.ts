@@ -104,6 +104,7 @@ export interface UserEdge {
 export interface Mutation {
   introduceGame?: IntroduceGamePayload | null;
   introduceTeam?: IntroduceTeamPayload | null;
+  introduceUser?: IntroduceUserPayload | null;
 }
 
 export interface IntroduceGamePayload {
@@ -113,6 +114,11 @@ export interface IntroduceGamePayload {
 
 export interface IntroduceTeamPayload {
   team: Team;
+  clientMutationId: string;
+}
+
+export interface IntroduceUserPayload {
+  user: User;
   clientMutationId: string;
 }
 
@@ -137,6 +143,16 @@ export interface IntroduceTeamInput {
 export interface TeamInput {
   offenseUserId: string;
   defenseUserId: string;
+}
+
+export interface IntroduceUserInput {
+  userInput: UserInput;
+  clientMutationId: string;
+}
+/* User Mutations */
+export interface UserInput {
+  firstName: string;
+  lastName: string;
 }
 
 export interface ConnectionArgs {
@@ -180,4 +196,7 @@ export interface IntroduceGameMutationArgs {
 }
 export interface IntroduceTeamMutationArgs {
   input?: IntroduceTeamInput | null;
+}
+export interface IntroduceUserMutationArgs {
+  input?: IntroduceUserInput | null;
 }
