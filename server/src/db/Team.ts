@@ -3,6 +3,7 @@ import { Document, Model } from "mongoose";
 import * as util from "util";
 
 // local
+import { getAdjustedRating } from "../util/rating";
 import {
   modelsToEdges,
   readDocsAfterCursor,
@@ -130,6 +131,11 @@ export async function updateTeamWithGame(id: string, game: Game): Promise<Team> 
   // Update computed stats
   stats.alltime.winPercentage = stats.alltime.wins / stats.alltime.played;
   stats.alltime.lossPercentage = stats.alltime.losses / stats.alltime.played;
+  const losingRating: number = game.losingTeamScore.team.stats.alltime.rating;
+  const winningRating: number = game.winningTeamScore.team.stats.alltime.rating;
+  const oppRating: number = didWin ? losingRating : winningRating;
+  stats.alltime.rating =
+    getAdjustedRating(stats.alltime.rating, oppRating, stats.alltime.played, didWin);
   updatedTeam.stats = stats;
   return await TeamModel
     .findByIdAndUpdate(id, typeToModel(updatedTeam), { new: true })

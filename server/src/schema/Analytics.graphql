@@ -7,7 +7,7 @@ type PerfAnalytics {
   losses: Int!
   lossPercentage: Float!
   played: Int!
-  rating: Int
+  rating: Float
 }
 
 type PlayerAnalytics {
