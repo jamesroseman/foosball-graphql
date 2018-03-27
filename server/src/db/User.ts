@@ -158,10 +158,10 @@ export async function updateUserWithGame(id: string, game: Game): Promise<User> 
     game.winningTeamScore.team.offense.stats.alltime.offense.rating,
   );
   const offLosOffRating = ratingToTsRating(
-    game.losingTeamScore.team.offense.stats.alltime.defense.rating,
+    game.losingTeamScore.team.offense.stats.alltime.offense.rating,
   );
   const defWinDefRating = ratingToTsRating(
-    game.winningTeamScore.team.defense.stats.alltime.offense.rating,
+    game.winningTeamScore.team.defense.stats.alltime.defense.rating,
   );
   const defLosDefRating = ratingToTsRating(
     game.losingTeamScore.team.defense.stats.alltime.defense.rating,
