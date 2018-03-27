@@ -132,12 +132,16 @@ export async function updateTeamWithGame(id: string, game: Game): Promise<Team> 
   // Update computed stats
   stats.alltime.winPercentage = stats.alltime.wins / stats.alltime.played;
   stats.alltime.lossPercentage = stats.alltime.losses / stats.alltime.played;
-  // Retrieve TrueSkill components from rating
-  const losRating = game.losingTeamScore.team.stats.alltime.rating;
-  const winRating = game.winningTeamScore.team.stats.alltime.rating;
-  // Re-assemble TrueSkill rating object
-  const losingRating: Rating = new Rating(losRating.mu, losRating.sigma);
-  const winningRating: Rating = new Rating(winRating.mu, winRating.sigma);
+  // TrueSkill computations
+  const ratingToTsRating = (rating: any) => {
+    return new Rating(rating.mu, rating.sigma);
+  };
+  const losingRating = ratingToTsRating(
+    game.losingTeamScore.team.stats.alltime.rating,
+  );
+  const winningRating = ratingToTsRating(
+    game.winningTeamScore.team.stats.alltime.rating,
+  );
   const [updatedWinnerRating, updatedLoserRating] =
     rate_1vs1(winningRating, losingRating);
   if (didWin) {

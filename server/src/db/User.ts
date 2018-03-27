@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { Document, Model } from "mongoose";
 import * as connectionFromMongoCursor from "relay-mongodb-connection";
-import { Rating } from "ts-trueskill";
+import { quality, rate, Rating } from "ts-trueskill";
 import * as util from "util";
 
 // local
@@ -149,6 +149,86 @@ export async function updateUserWithGame(id: string, game: Game): Promise<User> 
   const totStats = stats.alltime.total;
   stats.alltime.total.winPercentage = totStats.wins / totStats.played;
   stats.alltime.total.lossPercentage = totStats.losses / totStats.played;
+  // TrueSkill computations
+  const ratingToTsRating = (rating: any) => {
+    return new Rating(rating.mu, rating.sigma);
+  };
+  // Compute new positional rankings
+  const offWinOffRating = ratingToTsRating(
+    game.winningTeamScore.team.offense.stats.alltime.offense.rating,
+  );
+  const offLosOffRating = ratingToTsRating(
+    game.losingTeamScore.team.defense.stats.alltime.defense.rating,
+  );
+  const defWinDefRating = ratingToTsRating(
+    game.winningTeamScore.team.offense.stats.alltime.offense.rating,
+  );
+  const defLosDefRating = ratingToTsRating(
+    game.losingTeamScore.team.defense.stats.alltime.defense.rating,
+  );
+  const winningTeamPosRating = [offWinOffRating, defWinDefRating];
+  const losingTeamPosRating = [offLosOffRating, defLosDefRating];
+  const [
+    [updatedOffWinOffRating, updatedDefWinDefRating],
+    [updatedOffLosOffRating, updatedDefLosDefRating],
+  ] = rate([winningTeamPosRating, losingTeamPosRating]);
+  // Compute new absolute rankings
+  const offWinTotRating = ratingToTsRating(
+    game.winningTeamScore.team.offense.stats.alltime.total.rating,
+  );
+  const offLosTotRating = ratingToTsRating(
+    game.losingTeamScore.team.defense.stats.alltime.total.rating,
+  );
+  const defWinTotRating = ratingToTsRating(
+    game.winningTeamScore.team.offense.stats.alltime.total.rating,
+  );
+  const defLosTotRating = ratingToTsRating(
+    game.losingTeamScore.team.defense.stats.alltime.total.rating,
+  );
+  const winningTeamRating = [offWinOffRating, defWinDefRating];
+  const losingTeamRating = [offLosOffRating, defLosDefRating];
+  const [
+    [updatedOffWinTotRating, updatedDefWinTotRating],
+    [updatedOffLosTotRating, updatedDefLosTotRating],
+  ] = rate([winningTeamRating, losingTeamRating]);
+  // Update stats object
+  if (isOffense && didWin) {
+    stats.alltime.offense.rating = {
+      mu: updatedOffWinOffRating.mu,
+      sigma: updatedOffWinOffRating.sigma,
+    };
+    stats.alltime.total.rating = {
+      mu: updatedOffWinTotRating.mu,
+      sigma: updatedOffWinTotRating.sigma,
+    };
+  } else if (isOffense) {
+    stats.alltime.offense.rating = {
+      mu: updatedOffLosOffRating.mu,
+      sigma: updatedOffLosOffRating.sigma,
+    };
+    stats.alltime.total.rating = {
+      mu: updatedOffLosTotRating.mu,
+      sigma: updatedOffLosTotRating.sigma,
+    };
+  } else if (didWin) {
+    stats.alltime.defense.rating = {
+      mu: updatedDefWinDefRating.mu,
+      sigma: updatedDefWinDefRating.sigma,
+    };
+    stats.alltime.total.rating = {
+      mu: updatedDefWinTotRating.mu,
+      sigma: updatedDefWinTotRating.sigma,
+    };
+  } else {
+    stats.alltime.defense.rating = {
+      mu: updatedDefLosDefRating.mu,
+      sigma: updatedDefLosDefRating.sigma,
+    };
+    stats.alltime.total.rating = {
+      mu: updatedDefLosTotRating.mu,
+      sigma: updatedDefLosTotRating.sigma,
+    };
+  }
   updatedUser.stats = stats;
   return await UserModel
     .findByIdAndUpdate(id, typeToModel(updatedUser), { new: true })
