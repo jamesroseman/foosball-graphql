@@ -20,14 +20,14 @@ function getWinExpectFromRatings(rat1: number, rat2: number): number {
   return elo1 / (elo1 + elo2);
 }
 
-export function getAdjustedRating(
-  rating: number,
-  oppRating: number,
+export function getAdjustedTeamRating(
+  teamRating: number,
+  oppTeamRating: number,
   gamesPlayed: number,
   didWin: boolean,
 ): number {
-  const winExpect: number = getWinExpectFromRatings(rating, oppRating);
-  const kFactor: number = getKFactor(rating, gamesPlayed);
+  const winExpect: number = getWinExpectFromRatings(teamRating, oppTeamRating);
+  const kFactor: number = getKFactor(teamRating, gamesPlayed);
   const score = didWin ? 1 : 0;
-  return rating + kFactor * (score - winExpect);
+  return teamRating + kFactor * (score - winExpect);
 }

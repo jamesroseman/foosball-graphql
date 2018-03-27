@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 import { Document, Model } from "mongoose";
 import * as connectionFromMongoCursor from "relay-mongodb-connection";
+import { Rating } from "ts-trueskill";
 import * as util from "util";
 
 // local

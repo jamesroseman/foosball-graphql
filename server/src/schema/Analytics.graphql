@@ -1,13 +1,18 @@
 ### ANALYTICS SCHEMA ###
 
 # Helper types
+type TrueSkillRating {
+  mu: Float!
+  sigma: Float!
+}
+
 type PerfAnalytics {
   wins: Int!
   winPercentage: Float!
   losses: Int!
   lossPercentage: Float!
   played: Int!
-  rating: Float
+  rating: TrueSkillRating!
 }
 
 type PlayerAnalytics {

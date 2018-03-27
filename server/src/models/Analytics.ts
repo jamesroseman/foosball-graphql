@@ -4,13 +4,29 @@ import { Schema } from "mongoose";
 // Overwrite mpromises
 (mongoose as any).Promise = global.Promise;
 
+interface ITrueSkillRating {
+  mu: number;
+  sigma: number;
+}
+
+const TrueSkillRatingSchema: Schema = new Schema({
+  mu: {
+    required: true,
+    type: Number,
+  },
+  sigma: {
+    required: true,
+    type: Number,
+  },
+});
+
 interface IPerfAnalytics {
   wins: number;
   winPercentage: number;
   losses: number;
   lossPercentage: number;
   played: number;
-  rating: number;
+  rating: ITrueSkillRating;
 }
 
 const PerfAnalyticsSchema: Schema = new Schema({
@@ -30,9 +46,8 @@ const PerfAnalyticsSchema: Schema = new Schema({
     type: Number,
   },
   rating: {
-    default: 0,
     required: true,
-    type: Number,
+    type: TrueSkillRatingSchema,
   },
   winPercentage: {
     default: 0,

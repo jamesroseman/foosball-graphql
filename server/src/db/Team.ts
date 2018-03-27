@@ -1,9 +1,9 @@
 import * as mongoose from "mongoose";
 import { Document, Model } from "mongoose";
+import { quality, rate_1vs1, Rating } from "ts-trueskill";
 import * as util from "util";
 
 // local
-import { getAdjustedRating } from "../util/rating";
 import {
   modelsToEdges,
   readDocsAfterCursor,
@@ -73,6 +73,7 @@ export async function createTeam(team: Team): Promise<Team> {
   if (existingTeams.length > 0) {
     return Promise.resolve(modelToType(existingTeams[0]));
   }
+
   return TeamModel
     .create(typeToModel(team))
     // We return the GraphQL representation to the client
@@ -131,11 +132,25 @@ export async function updateTeamWithGame(id: string, game: Game): Promise<Team> 
   // Update computed stats
   stats.alltime.winPercentage = stats.alltime.wins / stats.alltime.played;
   stats.alltime.lossPercentage = stats.alltime.losses / stats.alltime.played;
-  const losingRating: number = game.losingTeamScore.team.stats.alltime.rating;
-  const winningRating: number = game.winningTeamScore.team.stats.alltime.rating;
-  const oppRating: number = didWin ? losingRating : winningRating;
-  stats.alltime.rating =
-    getAdjustedRating(stats.alltime.rating, oppRating, stats.alltime.played, didWin);
+  // Retrieve TrueSkill components from rating
+  const losRating = game.losingTeamScore.team.stats.alltime.rating;
+  const winRating = game.winningTeamScore.team.stats.alltime.rating;
+  // Re-assemble TrueSkill rating object
+  const losingRating: Rating = new Rating(losRating.mu, losRating.sigma);
+  const winningRating: Rating = new Rating(winRating.mu, winRating.sigma);
+  const [updatedWinnerRating, updatedLoserRating] =
+    rate_1vs1(winningRating, losingRating);
+  if (didWin) {
+    stats.alltime.rating = {
+      mu: updatedWinnerRating.mu,
+      sigma: updatedWinnerRating.sigma,
+    };
+  } else {
+    stats.alltime.rating = {
+      mu: updatedLoserRating.mu,
+      sigma: updatedLoserRating.sigma,
+    };
+  }
   updatedTeam.stats = stats;
   return await TeamModel
     .findByIdAndUpdate(id, typeToModel(updatedTeam), { new: true })

@@ -79,6 +79,7 @@
     "react-router": "^4.1.1",
     "react-tap-event-plugin": "^2.0.1",
     "relay-mongodb-connection": "^2.1.0",
+    "ts-trueskill": "^2.0.1",
     "util": "^0.10.3"
   },
   "devDependencies": {

@@ -1,3 +1,4 @@
+import { Rating } from "ts-trueskill";
 import {
   PerfAnalytics,
   PlayerAnalytics,
@@ -7,13 +8,14 @@ import {
   User,
 } from "../schema/types";
 
-const BASE_RATING: number = 1200;
+// Base rating components
+const { sigma, mu } = new Rating();
 
 const basePerfAnalytics: PerfAnalytics = {
   lossPercentage: 0.0,
   losses: 0,
   played: 0,
-  rating: BASE_RATING,
+  rating: { sigma, mu },
   winPercentage: 0.0,
   wins: 0,
 } as PerfAnalytics;

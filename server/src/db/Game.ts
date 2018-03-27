@@ -90,10 +90,10 @@ export async function createGame(game: Game): Promise<Game> {
     await updateTeamWithGame(losingTeam.id, game);
     await updateTeamWithGame(winningTeam.id, game);
     // Update users with new stats for this game
-    await updateUserWithGame(losingTeam.offense.id, game);
-    await updateUserWithGame(losingTeam.defense.id, game);
-    await updateUserWithGame(winningTeam.offense.id, game);
-    await updateUserWithGame(winningTeam.defense.id, game);
+    // await updateUserWithGame(losingTeam.offense.id, game);
+    // await updateUserWithGame(losingTeam.defense.id, game);
+    // await updateUserWithGame(winningTeam.offense.id, game);
+    // await updateUserWithGame(winningTeam.defense.id, game);
   });
   return GameModel
     .create(typeToModel(game))

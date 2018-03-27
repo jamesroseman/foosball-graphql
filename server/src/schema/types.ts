@@ -53,14 +53,19 @@ export interface PlayerAnalytics {
   offense: PerfAnalytics;
   defense: PerfAnalytics;
 }
-/* Helper types */
+
 export interface PerfAnalytics {
   wins: number;
   winPercentage: number;
   losses: number;
   lossPercentage: number;
   played: number;
-  rating?: number | null;
+  rating: TrueSkillRating;
+}
+/* Helper types */
+export interface TrueSkillRating {
+  mu: number;
+  sigma: number;
 }
 
 export interface TeamStats {

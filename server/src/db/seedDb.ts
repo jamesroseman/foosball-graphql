@@ -23,9 +23,9 @@ import { generateBaseTeam, generateBaseUser } from "../constants";
 const AMOUNT_OF_USERS = 16;
 const AMOUNT_OF_TEAMS = 8;
 const AMOUNT_OF_GAMES = 200;
-const WILL_WRITE_USERS: boolean = false;
-const WILL_WRITE_TEAMS: boolean = false;
-const WILL_WRITE_GAMES: boolean = false;
+const WILL_WRITE_USERS: boolean = true;
+const WILL_WRITE_TEAMS: boolean = true;
+const WILL_WRITE_GAMES: boolean = true;
 
 // Get the DB address
 const dbAddr: string | null = process.env.DB_ADDR;
@@ -103,7 +103,7 @@ async function writeModelsToDb() {
   // Users
   await writeToDatabase(createUser, usersToWrite, WILL_WRITE_USERS);
   const users: User[] = await readFromDatabase(readUsers);
-  console.log(users.length + " users written to DB.");
+  console.log(users.length + " users read from DB.");
   // Teams
   const teamsToWrite: Team[] = new Array(AMOUNT_OF_TEAMS)
     .fill(0)
@@ -114,14 +114,14 @@ async function writeModelsToDb() {
     });
   await writeToDatabase(createTeam, teamsToWrite, WILL_WRITE_TEAMS);
   const teams: Team[] = await readFromDatabase(readTeams);
-  console.log(teams.length + " teams written to DB.");
+  console.log(teams.length + " teams read from DB.");
   // Games
   const gamesToWrite: Game[] = new Array(AMOUNT_OF_GAMES)
     .fill(0)
     .map((e) => generateRandomGame(teams[getRandomIndex(teams.length)], teams[getRandomIndex(teams.length)]));
   await writeToDatabase(createGame, gamesToWrite, WILL_WRITE_GAMES);
   const games: Game[] = await readFromDatabase(readGames);
-  console.log(games.length + " games written to DB.");
+  console.log(games.length + " games read from DB.");
   close();
 }
 
